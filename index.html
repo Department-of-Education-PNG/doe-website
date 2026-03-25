@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department of Education - PNG</title>
+    <meta name="description" content="Official Website for the Department of Education, Papua New Guinea">
+
+    <!-- Google Fonts for Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="glow-blob"></div>
+
+    <header class="glass-header">
+        <div class="header-container">
+            <a href="#home" class="logo">
+                <img src="assets/images/logo/DoE-Logo.png" alt="Department Logo Placeholder"
+                    class="logo-img-placeholder">
+                <div class="logo-text">
+                    <h1>Department of Education</h1>
+                    <span>Papua New Guinea</span>
+                </div>
+            </a>
+
+            <nav class="main-nav">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#about" class="nav-link">About Us</a>
+
+                <div class="dropdown">
+                    <a href="#programs" class="nav-link">Programs & Services <span class="arrow">▼</span></a>
+                    <div class="dropdown-content glass-panel">
+                        <a href="#programs" class="dropdown-item">Activities</a>
+                        <a href="#programs" class="dropdown-item">e-Participations</a>
+                        <a href="#programs" class="dropdown-item">Consultation Papers</a>
+                        <a href="#forms" class="dropdown-item">Public Forms</a>
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <a href="#publications" class="nav-link">Publications <span class="arrow">▼</span></a>
+                    <div class="dropdown-content glass-panel">
+                        <a href="#publications" class="dropdown-item">Annual Reports</a>
+                        <a href="#publications" class="dropdown-item">Legislations</a>
+                        <a href="#publications" class="dropdown-item">Govt Plans & Policies</a>
+                        <a href="#publications" class="dropdown-item">Edu Plans & Policies</a>
+                        <a href="#publications" class="dropdown-item">Prov Plans & Policies</a>
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <a href="#news" class="nav-link">News & Events <span class="arrow">▼</span></a>
+                    <div class="dropdown-content glass-panel">
+                        <a href="#news" class="dropdown-item">Press Releases</a>
+                        <a href="#news" class="dropdown-item">Gallery</a>
+                        <a href="#news" class="dropdown-item">Calendar of events</a>
+                        <a href="#news" class="dropdown-item">Latest News</a>
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <a href="#home" class="nav-link">Curriculum <span class="arrow">▼</span></a>
+                    <div class="dropdown-content glass-panel">
+                        <a href="#home" class="dropdown-item">Elementary</a>
+                        <a href="#home" class="dropdown-item">Primary</a>
+                        <a href="#home" class="dropdown-item">Secondary</a>
+                        <a href="#home" class="dropdown-item">Textbooks</a>
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <a href="#careers" class="nav-link">Careers <span class="arrow">▼</span></a>
+                    <div class="dropdown-content glass-panel">
+                        <a href="#careers" class="dropdown-item">Job Opportunities</a>
+                        <a href="#careers" class="dropdown-item">Scholarships</a>
+                    </div>
+                </div>
+
+                <a href="#contact" class="nav-link btn-primary">Contact Us</a>
+            </nav>
+
+            <button class="mobile-toggle" aria-label="Toggle Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <main id="app-content">
+        <!-- SPA Content injected here by router.js -->
+    </main>
+
+    <footer class="glass-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <img src="assets/images/logo/DoE-Logo.png" alt="Department Logo Placeholder"
+                    class="logo-img-placeholder footer-logo">
+                <h3>Department of Education</h3>
+                <p>Leading the delivery of education services for a better Papua New Guinea.</p>
+                <div class="contact-info">
+                    <p>P.O Box 446 Waigani, NCD, Papua New Guinea</p>
+                    <p>enquiries@education.gov.pg</p>
+                    <p>+675 328 8800</p>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <a href="#about">About Us</a>
+                <a href="#programs">Programs & Services</a>
+                <a href="#publications">Publications</a>
+                <a href="#news">News & Events</a>
+            </div>
+            <div class="footer-col">
+                <h3>Legal & Privacy</h3>
+                <a href="#home">Privacy Statement</a>
+                <a href="#home">Accessibility Information</a>
+                <a href="#home">Terms of Use</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Department of Education, Papua New Guinea. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Utilities and App Logic -->
+    <script src="components/home.js"></script>
+    <script src="components/about.js"></script>
+    <script src="components/programs.js"></script>
+    <script src="components/publications.js"></script>
+    <script src="components/news.js"></script>
+    <script src="components/careers.js"></script>
+    <script src="components/contact.js"></script>
+    <script src="components/forms.js"></script>
+    <script src="router.js"></script>
+    
+    <script>
+        // Hamburger Menu & Mobile Accordion Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggle = document.querySelector('.mobile-toggle');
+            const nav = document.querySelector('.main-nav');
+            
+            // Toggle main menu via hamburger
+            toggle.addEventListener('click', () => {
+                nav.classList.toggle('active');
+                toggle.classList.toggle('active');
+            });
+
+            // Handle link clicks natively and smartly
+            nav.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    const dropdownParent = link.parentElement;
+                    const isMobileAccordion = window.innerWidth <= 900 && dropdownParent.classList.contains('dropdown') && link.classList.contains('nav-link');
+                    
+                    if (isMobileAccordion) {
+                        e.preventDefault(); 
+                        const isAlreadyOpen = dropdownParent.classList.contains('mobile-expanded');
+                        document.querySelectorAll('.dropdown').forEach(d => {
+                            d.classList.remove('mobile-expanded');
+                        });
+                        if (!isAlreadyOpen) {
+                            dropdownParent.classList.add('mobile-expanded');
+                        }
+                    } else {
+                        nav.classList.remove('active');
+                        toggle.classList.remove('active');
+                        document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('mobile-expanded'));
+                    }
+                });
+            });
+
+            // Global Modal Handlers
+            window.openModal = function(id) {
+                document.getElementById(id).classList.add('active');
+                document.body.style.overflow = 'hidden'; // Stop background scroll
+                
+                // Temporarily boost the main wrapper's stacking context strictly over the nav bar
+                const appContainer = document.getElementById('app-content');
+                appContainer.style.position = 'relative';
+                appContainer.style.zIndex = '9999'; 
+            };
+            
+            window.closeModal = function(e, id) {
+                // If the event triggered from the background click OR specifically on the close button
+                if (!e || e.target === e.currentTarget) {
+                    document.getElementById(id).classList.remove('active');
+                    document.body.style.overflow = 'auto'; // Restore scroll
+                    
+                    // Release the main wrapper constraint so the transparent nav works again
+                    document.getElementById('app-content').style.zIndex = 'auto';
+                }
+            };
+        });
+    </script>
+</body>
+</html>
