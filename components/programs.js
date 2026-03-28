@@ -1,7 +1,7 @@
 window.ProgramsComponent = {
     render: async () => {
         return `
-            <div style="height: 300px; display:flex; align-items:center; justify-content:center; background: linear-gradient(135deg, rgba(245, 166, 35, 0.2), transparent); border-bottom: 1px solid var(--glass-border);">
+            <div style="min-height: 300px; padding: 4rem 1.5rem; display:flex; flex-direction:column; align-items:center; justify-content:center; background: linear-gradient(135deg, rgba(0, 112, 243, 0.6), rgba(10, 13, 20, 0.8), rgba(245, 166, 35, 0.3)), url('assets/images/other-tabs-header-banner/banner-bg.png') center/cover no-repeat; border-bottom: 1px solid var(--glass-border);">
                 <div>
                     <h1 style="font-size: 3.5rem; text-align: center; margin-bottom: 0;">Programs & Services</h1>
                     <p style="text-align: center; color: var(--text-muted); font-size: 1.2rem;">Activities, e-Participations, and Consultations</p>

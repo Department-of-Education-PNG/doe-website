@@ -30,6 +30,34 @@ window.HomeComponent = {
                 </div>
             </section>
 
+            <!-- News Ticker -->
+            <div class="news-ticker-wrapper">
+                <span class="news-ticker-label">📰 LATEST</span>
+                <div class="news-ticker-track">
+                    <span class="news-ticker-item"><strong>NEW:</strong> NDoE Graduate Teacher Recruitment of 2026 now open for applications</span>
+                    <span class="news-ticker-divider">✦</span>
+                    <span class="news-ticker-item"><strong>BUDGET:</strong> Government allocates K904.5 million for education in 2026</span>
+                    <span class="news-ticker-divider">✦</span>
+                    <span class="news-ticker-item"><strong>POLICY:</strong> Strict mandate issued — No enrollment fee for 2026 students</span>
+                    <span class="news-ticker-divider">✦</span>
+                    <span class="news-ticker-item"><strong>REFORM:</strong> National curriculum reform integrates 21st century digital skills</span>
+                    <span class="news-ticker-divider">✦</span>
+                    <span class="news-ticker-item"><strong>EVENT:</strong> National Teacher Conference 2026 — March 15, Port Moresby</span>
+                    <span class="news-ticker-divider">✦</span>
+                    <!-- Duplicate for seamless loop -->
+                    <span class="news-ticker-item"><strong>NEW:</strong> NDoE Graduate Teacher Recruitment of 2026 now open for applications</span>
+                    <span class="news-ticker-divider">✦</span>
+                    <span class="news-ticker-item"><strong>BUDGET:</strong> Government allocates K904.5 million for education in 2026</span>
+                    <span class="news-ticker-divider">✦</span>
+                    <span class="news-ticker-item"><strong>POLICY:</strong> Strict mandate issued — No enrollment fee for 2026 students</span>
+                    <span class="news-ticker-divider">✦</span>
+                    <span class="news-ticker-item"><strong>REFORM:</strong> National curriculum reform integrates 21st century digital skills</span>
+                    <span class="news-ticker-divider">✦</span>
+                    <span class="news-ticker-item"><strong>EVENT:</strong> National Teacher Conference 2026 — March 15, Port Moresby</span>
+                    <span class="news-ticker-divider">✦</span>
+                </div>
+            </div>
+
             <section class="section-full">
                 <h2 class="section-title">Leadership Messages</h2>
                 <div class="grid-2">
@@ -55,6 +83,59 @@ window.HomeComponent = {
                     </div>
                 </div>
             </section>
+
+            <section class="section-full" style="background: linear-gradient(180deg, rgba(10, 13, 20, 0) 0%, rgba(0, 112, 243, 0.05) 100%); border-bottom: 1px solid var(--glass-border);">
+                <div class="section-header">
+                    <h2 class="section-title" style="margin-bottom: 0;">DoE Digital Applications</h2>
+                    <a href="#app-gallery" class="nav-link view-all-link">App Gallery &rarr;</a>
+                </div>
+                <div class="grid-4" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                    
+                    <a href="https://mail.education.gov.pg/owa/" target="_blank" class="card glass-panel app-card" style="text-align: center; padding: 2rem 1rem; text-decoration: none;">
+                        <div class="app-icon-placeholder" style="background: #0078d415; color: #0078d4; width: 80px; height: 80px; border-radius: 20px; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border: 1px solid #0078d430;">📧</div>
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: #fff;">Outlook Email</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">Staff Webmail Portal</p>
+                    </a>
+
+                    <a href="http://apps.education.gov.pg:8081/ords/f?p=144" target="_blank" class="card glass-panel app-card" style="text-align: center; padding: 2rem 1rem; text-decoration: none;">
+                        <div class="app-icon-placeholder" style="background: #2dca7315; color: #2dca73; width: 80px; height: 80px; border-radius: 20px; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border: 1px solid #2dca7330;">💰</div>
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: #fff;">MyPaySlip</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">Teacher Payroll System</p>
+                    </a>
+
+                    <a href="http://apps.education.gov.pg:8081/ords/f?p=103" target="_blank" class="card glass-panel app-card" style="text-align: center; padding: 2rem 1rem; text-decoration: none;">
+                        <div class="app-icon-placeholder" style="background: #f5a62315; color: #f5a623; width: 80px; height: 80px; border-radius: 20px; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border: 1px solid #f5a62330;">🎓</div>
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: #fff;">Grade 11 Selection</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">Online Selection Portal</p>
+                    </a>
+
+                    <a href="http://apps.education.gov.pg:8081/ords/f?p=125" target="_blank" class="card glass-panel app-card" style="text-align: center; padding: 2rem 1rem; text-decoration: none;">
+                        <div class="app-icon-placeholder" style="background: #e74c3c15; color: #e74c3c; width: 80px; height: 80px; border-radius: 20px; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border: 1px solid #e74c3c30;">👥</div>
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: #fff;">Info Management</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">Teacher Management System</p>
+                    </a>
+
+                </div>
+            </section>
+
+            <style>
+                .app-card {
+                    overflow: hidden;
+                    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                }
+                .app-card:hover {
+                    background: rgba(255, 255, 255, 0.05);
+                    border-color: rgba(255, 255, 255, 0.2);
+                    transform: translateY(-8px);
+                }
+                .app-icon-placeholder {
+                    transition: transform 0.4s ease, box-shadow 0.4s ease;
+                }
+                .app-card:hover .app-icon-placeholder {
+                    transform: scale(1.1) rotate(5deg);
+                    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                }
+            </style>
 
             <section class="section-full" style="background: rgba(0,0,0,0.3); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);">
                 <h2 class="section-title">Notice Board</h2>
@@ -120,48 +201,48 @@ window.HomeComponent = {
                 <div class="marquee-container">
                     <div class="marquee-track">
                         <!-- Set 1 -->
-                        <div class="doc-placeholder" style="padding:0; position:relative; overflow:hidden;">
-                            <img src="assets/images/documents/doc-1.jpg" alt="NEP 2020-2029" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <a href="#" target="_blank" class="doc-placeholder" style="display:block; cursor:pointer; padding:0; position:relative; overflow:hidden;">
+                            <img src="assets/images/documents/doc-img-01.png" alt="NEP 2020-2029" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                             <div style="display:none; width:100%; height:100%; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem;"><span style="font-size:2rem; margin-bottom:0.5rem;">📄</span>National Education Plan</div>
-                        </div>
-                        <div class="doc-placeholder" style="padding:0; position:relative; overflow:hidden;">
-                            <img src="assets/images/documents/doc-2.jpg" alt="Annual Report 2025" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        </a>
+                        <a href="#" target="_blank" class="doc-placeholder" style="display:block; cursor:pointer; padding:0; position:relative; overflow:hidden;">
+                            <img src="assets/images/documents/doc-img-02.png" alt="Annual Report 2025" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                             <div style="display:none; width:100%; height:100%; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem;"><span style="font-size:2rem; margin-bottom:0.5rem;">📄</span>Annual Report 2025</div>
-                        </div>
-                        <div class="doc-placeholder" style="padding:0; position:relative; overflow:hidden;">
-                            <img src="assets/images/documents/doc-3.jpg" alt="Education Act" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        </a>
+                        <a href="#" target="_blank" class="doc-placeholder" style="display:block; cursor:pointer; padding:0; position:relative; overflow:hidden;">
+                            <img src="assets/images/documents/doc-img-03.png" alt="Education Act" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                             <div style="display:none; width:100%; height:100%; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem;"><span style="font-size:2rem; margin-bottom:0.5rem;">📄</span>Education Act 1983</div>
-                        </div>
-                        <div class="doc-placeholder" style="padding:0; position:relative; overflow:hidden;">
-                            <img src="assets/images/documents/doc-4.jpg" alt="GFEP Manual" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        </a>
+                        <a href="#" target="_blank" class="doc-placeholder" style="display:block; cursor:pointer; padding:0; position:relative; overflow:hidden;">
+                            <img src="assets/images/documents/doc-img-04.png" alt="GFEP Manual" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                             <div style="display:none; width:100%; height:100%; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem;"><span style="font-size:2rem; margin-bottom:0.5rem;">📄</span>GFEP 2026 Manual</div>
-                        </div>
-                        <div class="doc-placeholder" style="padding:0; position:relative; overflow:hidden;">
-                            <img src="assets/images/documents/doc-5.jpg" alt="Teaching Act" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        </a>
+                        <a href="#" target="_blank" class="doc-placeholder" style="display:block; cursor:pointer; padding:0; position:relative; overflow:hidden;">
+                            <img src="assets/images/documents/doc-img-05.png" alt="Teaching Act" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                             <div style="display:none; width:100%; height:100%; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem;"><span style="font-size:2rem; margin-bottom:0.5rem;">📄</span>Teaching Service Act</div>
-                        </div>
+                        </a>
                         
                         <!-- Duplicate Set for Seamless Loop -->
-                        <div class="doc-placeholder" style="padding:0; position:relative; overflow:hidden;">
-                            <img src="assets/images/documents/doc-1.jpg" alt="NEP 2020-2029" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <a href="#" target="_blank" class="doc-placeholder" style="display:block; cursor:pointer; padding:0; position:relative; overflow:hidden;">
+                            <img src="assets/images/documents/doc-img-01.png" alt="NEP 2020-2029" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                             <div style="display:none; width:100%; height:100%; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem;"><span style="font-size:2rem; margin-bottom:0.5rem;">📄</span>National Education Plan</div>
-                        </div>
-                        <div class="doc-placeholder" style="padding:0; position:relative; overflow:hidden;">
-                            <img src="assets/images/documents/doc-2.jpg" alt="Annual Report 2025" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        </a>
+                        <a href="#" target="_blank" class="doc-placeholder" style="display:block; cursor:pointer; padding:0; position:relative; overflow:hidden;">
+                            <img src="assets/images/documents/doc-img-02.png" alt="Annual Report 2025" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                             <div style="display:none; width:100%; height:100%; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem;"><span style="font-size:2rem; margin-bottom:0.5rem;">📄</span>Annual Report 2025</div>
-                        </div>
-                        <div class="doc-placeholder" style="padding:0; position:relative; overflow:hidden;">
-                            <img src="assets/images/documents/doc-3.jpg" alt="Education Act" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        </a>
+                        <a href="#" target="_blank" class="doc-placeholder" style="display:block; cursor:pointer; padding:0; position:relative; overflow:hidden;">
+                            <img src="assets/images/documents/doc-img-03.png" alt="Education Act" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                             <div style="display:none; width:100%; height:100%; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem;"><span style="font-size:2rem; margin-bottom:0.5rem;">📄</span>Education Act 1983</div>
-                        </div>
-                        <div class="doc-placeholder" style="padding:0; position:relative; overflow:hidden;">
-                            <img src="assets/images/documents/doc-4.jpg" alt="GFEP Manual" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        </a>
+                        <a href="#" target="_blank" class="doc-placeholder" style="display:block; cursor:pointer; padding:0; position:relative; overflow:hidden;">
+                            <img src="assets/images/documents/doc-img-04.png" alt="GFEP Manual" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                             <div style="display:none; width:100%; height:100%; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem;"><span style="font-size:2rem; margin-bottom:0.5rem;">📄</span>GFEP 2026 Manual</div>
-                        </div>
-                        <div class="doc-placeholder" style="padding:0; position:relative; overflow:hidden;">
-                            <img src="assets/images/documents/doc-5.jpg" alt="Teaching Act" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        </a>
+                        <a href="#" target="_blank" class="doc-placeholder" style="display:block; cursor:pointer; padding:0; position:relative; overflow:hidden;">
+                            <img src="assets/images/documents/doc-img-05.png" alt="Teaching Act" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                             <div style="display:none; width:100%; height:100%; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem;"><span style="font-size:2rem; margin-bottom:0.5rem;">📄</span>Teaching Service Act</div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </section>
@@ -172,20 +253,38 @@ window.HomeComponent = {
                     <a href="#news" class="nav-link view-all-link">View All News &rarr;</a>
                 </div>
                 <div class="grid-3">
-                    <div class="card glass-panel news-card">
-                        <span style="font-size: 0.8rem; color: var(--primary); font-weight: bold;">25-02-2026</span>
-                        <h4 style="margin: 0.5rem 0;">NDoE Graduate Teacher Recruitment of 2026</h4>
-                        <a href="#" class="nav-link">Read more &rarr;</a>
+                    <div class="card glass-panel news-card" style="padding: 0; overflow: hidden;">
+                        <div class="news-img-wrapper" style="width:100%; height:200px; overflow:hidden; position:relative;">
+                            <img src="assets/images/hero/hero-1.jpg" alt="Teacher Recruitment" style="width:100%; height:100%; object-fit:cover; display:block; transition: transform 0.4s ease;" onerror="this.style.display='none';">
+                            <span class="news-date-badge">25 Feb 2026</span>
+                        </div>
+                        <div style="padding: 1.5rem;">
+                            <h4 style="margin: 0 0 0.8rem 0; font-size: 1.1rem;">NDoE Graduate Teacher Recruitment of 2026</h4>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.2rem;">The Department of Education announces the 2026 Graduate Teacher Recruitment program for all eligible graduates across Papua New Guinea.</p>
+                            <a href="#news" class="news-read-more">Read More &rarr;</a>
+                        </div>
                     </div>
-                    <div class="card glass-panel news-card">
-                        <span style="font-size: 0.8rem; color: var(--primary); font-weight: bold;">10-02-2026</span>
-                        <h4 style="margin: 0.5rem 0;">Government Allocates K904.5 Million</h4>
-                        <a href="#" class="nav-link">Read more &rarr;</a>
+                    <div class="card glass-panel news-card" style="padding: 0; overflow: hidden;">
+                        <div class="news-img-wrapper" style="width:100%; height:200px; overflow:hidden; position:relative;">
+                            <img src="assets/images/hero/hero-2.jpg" alt="Budget Allocation" style="width:100%; height:100%; object-fit:cover; display:block; transition: transform 0.4s ease;" onerror="this.style.display='none';">
+                            <span class="news-date-badge">10 Feb 2026</span>
+                        </div>
+                        <div style="padding: 1.5rem;">
+                            <h4 style="margin: 0 0 0.8rem 0; font-size: 1.1rem;">Government Allocates K904.5 Million for Education</h4>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.2rem;">The Government of Papua New Guinea has committed K904.5 million in the 2026 National Budget to support education across all levels.</p>
+                            <a href="#news" class="news-read-more">Read More &rarr;</a>
+                        </div>
                     </div>
-                    <div class="card glass-panel news-card">
-                        <span style="font-size: 0.8rem; color: var(--primary); font-weight: bold;">10-02-2026</span>
-                        <h4 style="margin: 0.5rem 0;">Strict 2026 Mandate: No Enrollment Fee</h4>
-                        <a href="#" class="nav-link">Read more &rarr;</a>
+                    <div class="card glass-panel news-card" style="padding: 0; overflow: hidden;">
+                        <div class="news-img-wrapper" style="width:100%; height:200px; overflow:hidden; position:relative;">
+                            <img src="assets/images/hero/hero-3.jpg" alt="No Enrollment Fee" style="width:100%; height:100%; object-fit:cover; display:block; transition: transform 0.4s ease;" onerror="this.style.display='none';">
+                            <span class="news-date-badge">10 Feb 2026</span>
+                        </div>
+                        <div style="padding: 1.5rem;">
+                            <h4 style="margin: 0 0 0.8rem 0; font-size: 1.1rem;">Strict 2026 Mandate: No Enrollment Fee for Students</h4>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.2rem;">The Secretary for Education has issued a strict directive that no school shall charge enrollment fees under the Government's Tuition Fee Free policy.</p>
+                            <a href="#news" class="news-read-more">Read More &rarr;</a>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -230,13 +329,23 @@ window.HomeComponent = {
                     
                     <div class="modal-body-light">
                         <div style="color: #0056b3; text-align: center; margin-bottom: 2rem; letter-spacing: 0.5px; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(0, 86, 179, 0.2);">
-                            <div style="font-size: 1.1rem; font-weight: 400; margin-bottom: 0.3rem;">MESSAGE FROM THE SECRETARY</div>
-                            <div style="font-size: 1.4rem; font-weight: 600; margin-bottom: 0.2rem;">DEPARTMENT OF EDUCATION</div>
+                            <div style="font-size: 1.1rem; font-weight: 400; margin-bottom: 0.3rem;">WELCOME MESSAGE FROM</div>
+                            <div style="font-size: 1.4rem; font-weight: 600; margin-bottom: 0.2rem;">DR. UKE KOMBRA, PhD, OBE</div>
+                            <div style="font-size: 1.25rem; font-weight: 500;">SECRETARY FOR EDUCATION</div>
                         </div>
                         
                         <div style="display: flow-root;">
                             <img src="assets/images/leaders/secretary.png" alt="Secretary" style="float: left; width: 220px; height: 220px; object-fit: cover; margin: 0 2rem 1rem 0; border: 4px solid #f5a623; padding: 2px;">
-                            <p style="margin-bottom: 1rem; font-size: 0.95rem; line-height: 1.6;">[The Secretary's full message will go here. Please provide the text to update.]</p>
+                            
+                            <p style="margin-bottom: 1rem; font-size: 0.95rem; line-height: 1.6;">HELLO, thank you for taking time to visit the Department of Education's new-look website.</p>
+                            <p style="margin-bottom: 1rem; font-size: 0.95rem; line-height: 1.6;">We have redeveloped our website so it is more modern but simple and user-friendly for our visitors to easily access and find information and data about important policies and programs and announcements, news and events about what is happening in the National Education System.</p>
+                            <p style="margin-bottom: 1rem; font-size: 0.95rem; line-height: 1.6;">Our mobile version (soon to be released) will enable users to easily access the website using their mobile phones. With such an approach we hope and aim to inform and connect with you, students, teachers, parents and everyone else on a real time basis.</p>
+                            <p style="margin-bottom: 1rem; font-size: 0.95rem; line-height: 1.6;">We will strive to improve our site and seek your feedbacks, suggestions and recommendations so the website meets everyone's needs and gives updates on a daily basis. So, we count on your involvement and cooperation.</p>
+                            <p style="margin-bottom: 1rem; font-size: 0.95rem; line-height: 1.6;">We hope you enjoy our new-look website and the content – WELCOME!</p>
+                            <p style="margin-bottom: 2rem; font-size: 0.95rem;">Thank you.</p>
+                            
+                            <p style="font-weight: bold; margin-bottom: 0.2rem; font-size: 0.95rem; color: #000;">Dr Uke Kombra, PhD, OBE</p>
+                            <p style="font-size: 0.9rem; color: #444;">Secretary for Education</p>
                         </div>
                     </div>
 

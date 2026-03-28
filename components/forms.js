@@ -1,7 +1,7 @@
 window.FormsComponent = {
     render: async () => {
         return `
-            <div style="height: 300px; display:flex; align-items:center; justify-content:center; background: linear-gradient(135deg, rgba(20, 200, 255, 0.2), transparent); border-bottom: 1px solid var(--glass-border);">
+            <div style="min-height: 300px; padding: 4rem 1.5rem; display:flex; flex-direction:column; align-items:center; justify-content:center; background: linear-gradient(135deg, rgba(0, 112, 243, 0.6), rgba(10, 13, 20, 0.8), rgba(245, 166, 35, 0.3)), url('assets/images/other-tabs-header-banner/banner-bg.png') center/cover no-repeat; border-bottom: 1px solid var(--glass-border);">
                 <div>
                     <h1 style="font-size: 3.5rem; text-align: center; margin-bottom: 0;">Public Forms & Legislation</h1>
                     <p style="text-align: center; color: var(--text-muted); font-size: 1.2rem;">Official documents, applications, and acts for teachers and the public</p>
@@ -35,7 +35,7 @@ window.FormsComponent = {
                                 <tr>
                                     <td>Teacher Query (EDB021)</td>
                                     <td>Query</td>
-                                    <td><a href="#" class="btn-table">Download PDF</a></td>
+                                    <td><a href="#form-teacher-query" class="btn-table btn-detail">View Details</a></td>
                                 </tr>
                                 <tr>
                                     <td>Change To Method of Pay (EDB022)</td>

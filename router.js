@@ -69,4 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if(window.ContactComponent) router.addRoute('contact', window.ContactComponent);
     if(window.FormsComponent) router.addRoute('forms', window.FormsComponent);
     if(window.FormDetailComponent) router.addRoute('form-detail', window.FormDetailComponent);
+    if(window.FormTeacherQueryComponent) router.addRoute('form-teacher-query', window.FormTeacherQueryComponent);
+    if(window.AppGalleryComponent) router.addRoute('app-gallery', window.AppGalleryComponent);
+    if(window.ElementaryComponent) router.addRoute('elementary', window.ElementaryComponent);
+    if(window.PrimaryComponent) router.addRoute('primary', window.PrimaryComponent);
 });
