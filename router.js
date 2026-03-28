@@ -73,4 +73,5 @@ document.addEventListener('DOMContentLoaded', () => {
     if(window.AppGalleryComponent) router.addRoute('app-gallery', window.AppGalleryComponent);
     if(window.ElementaryComponent) router.addRoute('elementary', window.ElementaryComponent);
     if(window.PrimaryComponent) router.addRoute('primary', window.PrimaryComponent);
+    if(window.SecondaryComponent) router.addRoute('secondary', window.SecondaryComponent);
 });
