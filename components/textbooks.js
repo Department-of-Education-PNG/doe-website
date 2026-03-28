@@ -1,7 +1,7 @@
 window.TextbooksComponent = {
     render: async () => {
         return `
-            <div class="subpage-header" style="background: linear-gradient(135deg, rgba(20, 50, 95, 0.9) 0%, rgba(14, 32, 64, 0.7) 100%), url('assets/images/hero/hero-5.jpg') center/cover; padding: 10rem 2rem 6rem; text-align: center; position: relative; overflow: hidden;">
+            <div class="subpage-header" style="background: linear-gradient(135deg, rgba(20, 50, 95, 0.9) 0%, rgba(14, 32, 64, 0.7) 100%), url('assets/images/other-tabs-header-banner/banner-bg.png') center/cover; padding: 10rem 2rem 6rem; text-align: center; position: relative; overflow: hidden;">
                 <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, var(--primary-glow) 0%, transparent 70%); opacity: 0.3; pointer-events: none;"></div>
                 <div class="container" style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;">
                     <h1 style="font-size: clamp(2.5rem, 8vw, 4rem); font-weight: 800; margin-bottom: 1.5rem; letter-spacing: -1.5px; line-height: 1.1;">Textbooks & Manuals</h1>
