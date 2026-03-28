@@ -74,4 +74,5 @@ document.addEventListener('DOMContentLoaded', () => {
     if(window.ElementaryComponent) router.addRoute('elementary', window.ElementaryComponent);
     if(window.PrimaryComponent) router.addRoute('primary', window.PrimaryComponent);
     if(window.SecondaryComponent) router.addRoute('secondary', window.SecondaryComponent);
+    if(window.TextbooksComponent) router.addRoute('textbooks', window.TextbooksComponent);
 });
