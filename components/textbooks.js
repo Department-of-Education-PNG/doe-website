@@ -14,7 +14,7 @@ window.TextbooksComponent = {
                 <div class="grid-2" style="align-items: center; gap: 5rem;">
                     <div style="position: relative;">
                         <div class="glass-panel" style="padding: 1rem; border-radius: 24px; position: relative; z-index: 2;">
-                            <img src="assets/images/hero/hero-5.jpg" alt="National Textbooks" style="width: 100%; height: 500px; object-fit: cover; border-radius: 16px; display: block;" onerror="this.src='https://images.unsplash.com/photo-1491849591647-d597aa4aabc1?auto=format&fit=crop&q=80&w=800'">
+                            <img src="assets/images/textbook-imgs/textbooks.png" alt="National Textbooks" style="width: 100%; height: 500px; object-fit: cover; border-radius: 16px; display: block;" onerror="this.src='https://images.unsplash.com/photo-1491849591647-d597aa4aabc1?auto=format&fit=crop&q=80&w=800'">
                         </div>
                         <div style="position: absolute; top: -30px; left: -30px; width: 150px; height: 150px; background: var(--primary-glow); filter: blur(60px); opacity: 0.5; z-index: 1;"></div>
                         <div style="position: absolute; bottom: -40px; right: -40px; width: 220px; height: 220px; background: rgba(59, 165, 224, 0.2); filter: blur(80px); opacity: 0.4; z-index: 1;"></div>
