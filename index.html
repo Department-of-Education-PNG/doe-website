@@ -125,11 +125,23 @@
         </div>
     </div>
 
-    <!-- Gallery Modal (Lightbox) -->
+    <!-- Gallery Modal (Album/Category View) -->
     <div class="gallery-modal" id="gallery-modal">
-        <span class="gallery-modal-close" id="gallery-modal-close">&times;</span>
-        <img class="gallery-modal-content" id="gallery-modal-img" alt="Enlarged gallery image">
-        <div id="gallery-modal-caption"></div>
+        <div class="gallery-modal-inner">
+            <span class="gallery-modal-close" id="gallery-modal-close">&times;</span>
+            <div id="gallery-album-header" class="gallery-album-header">
+                <h2 id="gallery-album-title" class="gallery-album-title"></h2>
+                <p id="gallery-album-desc" class="gallery-album-desc"></p>
+            </div>
+            <div class="gallery-modal-grid" id="gallery-modal-grid">
+                <!-- Category images will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-modal" id="detail-modal">
+        <span class="detail-modal-close" id="detail-modal-close">&times;</span>
+        <img class="detail-modal-content" id="detail-modal-img" alt="Detailed event image view">
     </div>
 
     <main id="app-content">
