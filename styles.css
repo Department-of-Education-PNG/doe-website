@@ -1720,3 +1720,29 @@ a {
 .gallery-album-desc {
     color: var(--text-muted);
 }
+
+/* Press Release List Styling */
+.press-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.press-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--primary) !important;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.press-card img {
+    transition: transform 0.4s ease;
+}
+
+.press-card:hover img {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .press-card {
+        grid-template-columns: 1fr !important;
+    }
+}

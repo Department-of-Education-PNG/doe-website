@@ -76,4 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if(window.SecondaryComponent) router.addRoute('secondary', window.SecondaryComponent);
     if(window.TextbooksComponent) router.addRoute('textbooks', window.TextbooksComponent);
     if(window.GalleryComponent) router.addRoute('gallery', window.GalleryComponent);
+    if(window.PressReleaseComponent) router.addRoute('press-release', window.PressReleaseComponent);
 });
+
