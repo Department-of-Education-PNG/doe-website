@@ -108,5 +108,40 @@ window.GalleryComponent = {
                 </div>
             </section>
         `;
+    },
+
+    afterRender: () => {
+        const modal = document.getElementById('gallery-modal');
+        const modalImg = document.getElementById('gallery-modal-img');
+        const captionText = document.getElementById('gallery-modal-caption');
+        const cards = document.querySelectorAll('.gallery-card');
+
+        cards.forEach(card => {
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', function() {
+                const img = this.querySelector('img');
+                const title = this.querySelector('h4').innerText;
+                const desc = this.querySelector('p').innerText;
+                
+                modal.style.display = "block";
+                modalImg.src = img.src;
+                captionText.innerHTML = `<div style="color: var(--accent); margin-bottom: 0.5rem; font-size: 1.4rem;">${title}</div><div>${desc}</div>`;
+            });
+        });
+
+        // Close the modal
+        const closeBtn = document.getElementById('gallery-modal-close');
+        if(closeBtn) {
+            closeBtn.onclick = function() {
+                modal.style.display = "none";
+            }
+        }
+
+        // Close when clicking outside the image
+        modal.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
     }
 };
