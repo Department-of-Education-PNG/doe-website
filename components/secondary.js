@@ -27,7 +27,7 @@ window.SecondaryComponent = {
                     </div>
                     <div style="position: relative;">
                         <div class="glass-panel" style="padding: 1rem; border-radius: 24px; position: relative; z-index: 2;">
-                            <img src="assets/images/hero/hero-4.jpg" alt="Secondary Education" style="width: 100%; height: 500px; object-fit: cover; border-radius: 16px; display: block;" onerror="this.src='https://images.unsplash.com/photo-1523050853061-8c48f21287e0?auto=format&fit=crop&q=80&w=800'">
+                            <img src="assets/images/secondary-imgs/sec-img.png" alt="Secondary Education" style="width: 100%; height: 500px; object-fit: cover; border-radius: 16px; display: block;" onerror="this.src='https://images.unsplash.com/photo-1523050853061-8c48f21287e0?auto=format&fit=crop&q=80&w=800'">
                         </div>
                         <div style="position: absolute; top: -30px; right: -30px; width: 150px; height: 150px; background: var(--primary-glow); filter: blur(60px); opacity: 0.5; z-index: 1;"></div>
                         <div style="position: absolute; bottom: -40px; left: -40px; width: 200px; height: 200px; background: rgba(59, 165, 224, 0.2); filter: blur(80px); opacity: 0.4; z-index: 1;"></div>
