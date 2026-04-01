@@ -50,9 +50,9 @@ window.PressReleaseComponent = {
                     <!-- Filter and Search -->
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4rem; flex-wrap: wrap; gap: 2rem;">
                         <h3 style="font-size: 1.8rem; font-weight: 700; color: #fff;">Latest Releases</h3>
-                        <div class="glass-panel" style="display: flex; align-items: center; padding: 0.5rem 1.5rem; border-radius: 30px;">
-                            <input type="text" placeholder="Filter announcements..." style="background: transparent; border: none; color: #fff; outline: none; padding: 0.5rem; width: 250px;">
-                            <span style="opacity: 0.5;">🔍</span>
+                        <div class="glass-panel" style="display: flex; align-items: center; padding: 0.6rem 1.5rem; border-radius: 50px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03);">
+                            <span style="opacity: 0.6; margin-right: 0.8rem;">🔍</span>
+                            <input type="text" placeholder="Filter announcements..." style="background: transparent; border: none; color: #fff; outline: none; padding: 0.4rem 0; width: 280px; font-size: 0.95rem;">
                         </div>
                     </div>
 
@@ -68,10 +68,10 @@ window.PressReleaseComponent = {
                                     <h4 style="font-size: 1.4rem; color: #fff; margin-bottom: 1rem; line-height: 1.3;">${release.title}</h4>
                                     <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.6; margin-bottom: 1.5rem;">${release.summary}</p>
                                     <div style="display: flex; gap: 1rem;">
-                                        <a href="${release.pdfUrl}" class="btn-primary" style="padding: 0.6rem 1.5rem; font-size: 0.9rem; border-radius: 12px; display: inline-flex; align-items: center; gap: 0.5rem;">
+                                        <a href="${release.pdfUrl}" class="btn-primary" style="padding: 0.8rem 1.8rem; font-size: 0.95rem; border-radius: 12px; display: inline-flex; align-items: center; gap: 0.6rem; font-weight: 600;">
                                             <span>📄</span> Read Statement
                                         </a>
-                                        <button class="nav-link" style="padding: 0.6rem 1.5rem; font-size: 0.9rem; opacity: 0.8;">Share</button>
+                                        <button class="gallery-filter-btn" style="padding: 0.8rem 1.8rem; font-size: 0.95rem; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.05); color: var(--text-muted); font-weight: 600; cursor: pointer; backdrop-filter: blur(10px);">Share</button>
                                     </div>
                                 </div>
                             </div>
