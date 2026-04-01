@@ -261,16 +261,20 @@
                     if (isMobileAccordion) {
                         e.preventDefault(); 
                         const isAlreadyOpen = dropdownParent.classList.contains('mobile-expanded');
-                        document.querySelectorAll('.dropdown').forEach(d => {
-                            d.classList.remove('mobile-expanded');
-                        });
+                        
+                        // Close all primary dropdowns and nested sub-menus before opening the new one
+                        document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('mobile-expanded'));
+                        document.querySelectorAll('.nested-dropdown').forEach(nd => nd.classList.remove('active'));
+                        
                         if (!isAlreadyOpen) {
                             dropdownParent.classList.add('mobile-expanded');
                         }
                     } else {
+                        // Regular link click - close menu
                         nav.classList.remove('active');
                         toggle.classList.remove('active');
                         document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('mobile-expanded'));
+                        document.querySelectorAll('.nested-dropdown').forEach(nd => nd.classList.remove('active'));
                     }
                 });
             });
@@ -303,9 +307,43 @@
                 e.stopPropagation();
                 const parent = e.currentTarget.closest('.nested-dropdown');
                 if (parent) {
+                    // Close other nested sub-menus in the same container
+                    const siblingNested = parent.parentElement.querySelectorAll('.nested-dropdown');
+                    siblingNested.forEach(el => {
+                        if (el !== parent) el.classList.remove('active');
+                    });
+                    
                     parent.classList.toggle('active');
                 }
             };
+
+            // Global Click Away to Close Submenus and Dropdowns
+            document.addEventListener('click', (e) => {
+                const isNav = e.target.closest('.main-nav');
+                const isToggle = e.target.closest('.mobile-toggle');
+                
+                // On desktop it's usually hover, but for click-to-open or mobile-expanded:
+                if (!isNav && !isToggle) {
+                    document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('mobile-expanded'));
+                    document.querySelectorAll('.nested-dropdown').forEach(nd => nd.classList.remove('active'));
+                    
+                    // Also close mobile menu if clicking outside
+                    nav.classList.remove('active');
+                    toggle.classList.remove('active');
+                }
+            });
+
+            // Handle Escape key to close everything
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('mobile-expanded'));
+                    document.querySelectorAll('.nested-dropdown').forEach(nd => nd.classList.remove('active'));
+                    nav.classList.remove('active');
+                    toggle.classList.remove('active');
+                    document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+                    document.body.style.overflow = 'auto';
+                }
+            });
         });
     </script>
 </body>
