@@ -79,7 +79,9 @@ window.PressReleaseComponent = {
                     </div>
                     
                     <div style="text-align: center; margin-top: 5rem;">
-                        <button class="nav-link" style="font-size: 1.1rem; font-weight: 600; text-decoration: underline;">Load older statements</button>
+                        <button class="gallery-filter-btn" style="font-size: 1.1rem; font-weight: 700; padding: 1.2rem 3rem; border-radius: 50px; border: 1px solid var(--primary); background: transparent; color: var(--primary); cursor: pointer; transition: all 0.3s ease;">
+                            View Older Statements
+                        </button>
                     </div>
                 </div>
             </section>
