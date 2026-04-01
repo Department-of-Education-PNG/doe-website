@@ -12,12 +12,12 @@ window.GalleryComponent = {
 
             <section class="section-full">
                 <div class="gallery-container" style="padding: 2rem 0;">
-                    <!-- Filter Tabs (Future expansion) -->
+                    <!-- Filter Tabs -->
                     <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 4rem; flex-wrap: wrap;">
-                        <button class="btn-primary" style="padding: 0.6rem 1.5rem; border-radius: 30px;">All Events</button>
-                        <button class="nav-link" style="padding: 0.6rem 1.5rem; color: var(--text-muted);">Cultural Events</button>
-                        <button class="nav-link" style="padding: 0.6rem 1.5rem; color: var(--text-muted);">Examinations</button>
-                        <button class="nav-link" style="padding: 0.6rem 1.5rem; color: var(--text-muted);">Inaugurations</button>
+                        <button class="gallery-filter-btn active" style="padding: 0.8rem 2rem; border-radius: 50px; border: 1px solid var(--primary); background: var(--primary); color: #fff; font-weight: 700; box-shadow: 0 10px 20px rgba(59, 165, 224, 0.2);">All Events</button>
+                        <button class="gallery-filter-btn" style="padding: 0.8rem 2rem; border-radius: 50px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.05); color: var(--text-muted); font-weight: 600; backdrop-filter: blur(10px);">Cultural Events</button>
+                        <button class="gallery-filter-btn" style="padding: 0.8rem 2rem; border-radius: 50px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.05); color: var(--text-muted); font-weight: 600; backdrop-filter: blur(10px);">Examinations</button>
+                        <button class="gallery-filter-btn" style="padding: 0.8rem 2rem; border-radius: 50px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.05); color: var(--text-muted); font-weight: 600; backdrop-filter: blur(10px);">Inaugurations</button>
                     </div>
 
                     <div class="grid-3" style="gap: 2rem;">
