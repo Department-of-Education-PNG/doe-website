@@ -1,39 +1,27 @@
 window.PressReleaseComponent = {
     render: async () => {
-        const releases = [
-            {
-                id: 1,
-                date: 'March 15, 2024',
-                title: 'Announcement of 2024 National Examinations Schedule',
-                summary: 'The Department of Education officially releases the schedule for the upcoming Grade 10 and Grade 12 National Examinations for the 2024 academic year.',
-                image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=800',
-                pdfUrl: '#'
-            },
-            {
-                id: 2,
-                date: 'February 22, 2024',
-                title: 'Launching of Standard Based Curriculum (SBC) Digital Resources',
-                summary: 'New digital platforms for teachers and students were launched today to support the implementation of the Standard Based Curriculum across all provinces.',
-                image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=800',
-                pdfUrl: '#'
-            },
-            {
-                id: 3,
-                date: 'January 10, 2024',
-                title: 'Ministerial Statement on Teacher Salary and Housing Adjustments',
-                summary: 'The Minister for Education provides an update on the progress of the teacher salary re-classification and the newly proposed housing allowance for rural educators.',
-                image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800',
-                pdfUrl: '#'
-            },
-            {
-                id: 4,
-                date: 'December 05, 2023',
-                title: '2023 National Education Infrastructure Report Released',
-                summary: 'The comprehensive report detailing the status of school infrastructure and the maintenance requirements for the 2024-2028 modernization program.',
-                image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800',
-                pdfUrl: '#'
-            }
-        ];
+        // Fetch from API, fallback to hardcoded
+        let releases = [];
+        const apiData = await DoEAPI.get('press-releases.php');
+        
+        if (apiData && apiData.data && apiData.data.length > 0) {
+            releases = apiData.data.map(r => ({
+                id: r.id,
+                date: new Date(r.date_published).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+                title: r.title,
+                summary: r.summary || '',
+                image: r.image_path || 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=800',
+                pdfUrl: r.pdf_path || '#'
+            }));
+        } else {
+            // Fallback data for when API is not available
+            releases = [
+                { id: 1, date: 'March 15, 2024', title: 'Announcement of 2024 National Examinations Schedule', summary: 'The Department of Education officially releases the schedule for the upcoming Grade 10 and Grade 12 National Examinations for the 2024 academic year.', image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=800', pdfUrl: '#' },
+                { id: 2, date: 'February 22, 2024', title: 'Launching of Standard Based Curriculum (SBC) Digital Resources', summary: 'New digital platforms for teachers and students were launched today to support the implementation of the Standard Based Curriculum across all provinces.', image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=800', pdfUrl: '#' },
+                { id: 3, date: 'January 10, 2024', title: 'Ministerial Statement on Teacher Salary and Housing Adjustments', summary: 'The Minister for Education provides an update on the progress of the teacher salary re-classification and the newly proposed housing allowance for rural educators.', image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800', pdfUrl: '#' },
+                { id: 4, date: 'December 05, 2023', title: '2023 National Education Infrastructure Report Released', summary: 'The comprehensive report detailing the status of school infrastructure and the maintenance requirements for the 2024-2028 modernization program.', image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800', pdfUrl: '#' }
+            ];
+        }
 
         return `
             <div class="subpage-header" style="background: linear-gradient(135deg, rgba(14, 32, 64, 0.95) 0%, rgba(14, 32, 64, 0.8) 100%), url('assets/images/other-tabs-header-banner/banner-bg.png') center/cover; padding: 10rem 2rem 6rem; text-align: center; position: relative; overflow: hidden;">
@@ -47,7 +35,6 @@ window.PressReleaseComponent = {
 
             <section class="section-full">
                 <div class="container" style="max-width: 1000px; margin: 0 auto;">
-                    <!-- Filter and Search -->
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4rem; flex-wrap: wrap; gap: 2rem;">
                         <h3 style="font-size: 1.8rem; font-weight: 700; color: #fff;">Latest Releases</h3>
                         <div class="glass-panel" style="display: flex; align-items: center; padding: 0.6rem 1.5rem; border-radius: 50px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03);">
@@ -56,7 +43,6 @@ window.PressReleaseComponent = {
                         </div>
                     </div>
 
-                    <!-- Press Release List -->
                     <div class="press-list" style="display: flex; flex-direction: column; gap: 2rem;">
                         ${releases.map(release => `
                             <div class="glass-panel press-card" style="display: grid; grid-template-columns: 250px 1fr; gap: 2rem; padding: 1.5rem; border-radius: 24px; transition: transform 0.3s ease; border: 1px solid var(--glass-border);">

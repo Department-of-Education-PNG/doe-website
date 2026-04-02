@@ -1,0 +1,9 @@
+# Prevent PHP execution in uploads
+<FilesMatch "\.(php|phtml|php3|php4|php5|phps)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</FilesMatch>
+
+# Prevent directory listing
+Options -Indexes

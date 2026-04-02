@@ -1,0 +1,28 @@
+# API .htaccess — DoE Website
+# Protects config files and sets headers
+
+# Deny access to config directory
+<FilesMatch "^(database|mail)\.php$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</FilesMatch>
+
+# Deny access to install.php after setup (uncomment after running install)
+# <Files "install.php">
+#     Require all denied
+# </Files>
+
+# Set PHP upload limits
+<IfModule mod_php.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 12M
+    php_value max_execution_time 60
+</IfModule>
+
+# Enable CORS for API
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type"
+</IfModule>
