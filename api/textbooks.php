@@ -31,19 +31,23 @@ switch ($action) {
         validateRequired($data, ['grade_level', 'subject']);
         $stmt = $pdo->prepare("INSERT INTO textbooks (grade_level, subject, textbook_pdf, manual_pdf, sort_order) VALUES (?,?,?,?,?)");
         $stmt->execute([sanitize($data['grade_level']), sanitize($data['subject']), $data['textbook_pdf'] ?? null, $data['manual_pdf'] ?? null, (int)($data['sort_order'] ?? 0)]);
-        jsonResponse(['success' => true, 'id' => $pdo->lastInsertId()], 201);
+        $newId = $pdo->lastInsertId();
+        logActivity('CREATE', 'textbooks', $newId, "Created textbook entry: " . $data['grade_level'] . " - " . $data['subject']);
+        jsonResponse(['success' => true, 'id' => $newId], 201);
         break;
     case 'update':
         $data = getPostData();
         validateRequired($data, ['id', 'grade_level', 'subject']);
         $stmt = $pdo->prepare("UPDATE textbooks SET grade_level=?, subject=?, textbook_pdf=?, manual_pdf=?, sort_order=? WHERE id=?");
         $stmt->execute([sanitize($data['grade_level']), sanitize($data['subject']), $data['textbook_pdf'] ?? null, $data['manual_pdf'] ?? null, (int)($data['sort_order'] ?? 0), (int)$data['id']]);
+        logActivity('UPDATE', 'textbooks', $data['id'], "Updated textbook entry: " . $data['grade_level'] . " - " . $data['subject']);
         jsonResponse(['success' => true]);
         break;
     case 'delete':
         $data = getPostData();
         validateRequired($data, ['id']);
         $pdo->prepare("DELETE FROM textbooks WHERE id = ?")->execute([(int)$data['id']]);
+        logActivity('DELETE', 'textbooks', $data['id'], "Deleted textbook entry ID: " . $data['id']);
         jsonResponse(['success' => true]);
         break;
     default:

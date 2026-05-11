@@ -1,9 +1,29 @@
-# Prevent PHP execution in uploads
-<FilesMatch "\.(php|phtml|php3|php4|php5|phps)$">
-    <IfModule mod_authz_core.c>
-        Require all denied
-    </IfModule>
+# Allow reading of static assets normally
+<FilesMatch "\.(pdf|jpg|jpeg|png|gif|webp|svg|ico)$">
+    Order Allow,Deny
+    Allow from all
 </FilesMatch>
 
-# Prevent directory listing
-Options -Indexes
+# Prevent script execution for security
+<FilesMatch "\.(php|php3|php4|php5|phtml|pl|py|jsp|asp|sh|cgi)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Force PDF viewing behavior (Inline) by default
+<FilesMatch "\.pdf$">
+    ForceType application/pdf
+    
+    # If download=1 is present in query string, force attachment
+    # Note: Query_String check requires Rewrite or SetEnvIf with full URL in some configs, 
+    # but SetEnvIf Query_String is standard in Apache 2.4+
+    SetEnvIf Query_String "download=1" FORCED_DOWNLOAD
+    Header set Content-Disposition "attachment" env=FORCED_DOWNLOAD
+    Header set Content-Disposition "inline" env=!FORCED_DOWNLOAD
+</FilesMatch>
+
+# Keep documents and archives as forced downloads
+<FilesMatch "\.(doc|docx|xls|xlsx|zip|rar)$">
+    ForceType application/octet-stream
+    Header set Content-Disposition "attachment"
+</FilesMatch>

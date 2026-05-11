@@ -1,0 +1,43 @@
+# Environment-specific configuration (Local secrets)
+api/config/*.php
+.env
+
+# Uploads and User Content (Should stay on the server, not in Git)
+uploads/images/*
+uploads/documents/*
+uploads/gallery/*
+!uploads/.htaccess
+!uploads/index.html
+
+# Logs and Temporary files
+*.log
+tmp/
+.temp/
+.cache/
+
+# Backups and Archives
+*.sql
+*.zip
+*.gz
+*.tar
+*.bak
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Maintenance files
+api/install.php
+tmp_migration.php
+scratch/

@@ -41,8 +41,16 @@ if ($file['size'] > $maxSize) {
 
 // Allowed extensions
 $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-$documentExtensions = ['pdf'];
-$allowedExtensions = $type === 'document' ? $documentExtensions : $imageExtensions;
+$documentExtensions = ['pdf', 'jpg', 'jpeg', 'png', 'webp', 'docx', 'doc', 'xls', 'xlsx', 'txt', 'csv'];
+$knowledgeExtensions = ['pdf', 'txt', 'csv', 'xlsx', 'xls', 'docx', 'doc'];
+
+if ($type === 'knowledge') {
+    $allowedExtensions = $knowledgeExtensions;
+} elseif ($type === 'document') {
+    $allowedExtensions = $documentExtensions;
+} else {
+    $allowedExtensions = $imageExtensions;
+}
 
 $originalName = $file['name'];
 $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
@@ -55,50 +63,76 @@ if (!in_array($extension, $allowedExtensions)) {
 $finfo = new finfo(FILEINFO_MIME_TYPE);
 $mimeType = $finfo->file($file['tmp_name']);
 
-$allowedMimes = $type === 'document' 
-    ? ['application/pdf']
-    : ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+$allowedMimes = [
+    'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+    'application/pdf', 'text/plain', 'text/csv', 
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.ms-excel'
+];
 
 if (!in_array($mimeType, $allowedMimes)) {
     jsonError('Invalid file type detected');
 }
 
-// Generate safe filename
-$safeName = time() . '_' . preg_replace('/[^a-zA-Z0-9_.-]/', '', pathinfo($originalName, PATHINFO_FILENAME));
-$newFilename = $safeName . '.' . $extension;
+// Generate clean, descriptive filename
+$fileNameOnly = preg_replace('/[^a-zA-Z0-9_.-]/', '', pathinfo($originalName, PATHINFO_FILENAME));
+$newFilename = $fileNameOnly . '.' . $extension;
 
 // Determine upload directory
 $baseDir = realpath(__DIR__ . '/../uploads');
 if (!$baseDir) {
-    // Create uploads directory if it doesn't exist
     $baseDir = __DIR__ . '/../uploads';
     if (!is_dir($baseDir)) mkdir($baseDir, 0755, true);
     $baseDir = realpath($baseDir);
 }
 
-$subDir = $type === 'document' ? 'documents' : 'images';
+// Map the requested folder to a physical subfolder
+$requestedFolder = $_POST['folder'] ?? '';
+$isGallery = (isset($_POST['gallery']) && $_POST['gallery'] === '1') || $requestedFolder === 'gallery';
+
+if ($isGallery) {
+    $subDir = 'gallery';
+} elseif (!empty($requestedFolder)) {
+    // Whitelist allowed folders to prevent directory traversal
+    $allowedFolders = ['news', 'press', 'events', 'publications', 'textbooks', 'jobs', 'scholarships', 'forms', 'notices', 'apps', 'calendars', 'knowledge'];
+    $subDir = in_array($requestedFolder, $allowedFolders) ? $requestedFolder : ($type === 'document' || $type === 'knowledge' ? 'documents' : 'images');
+} else {
+    $subDir = ($type === 'document' || $type === 'knowledge') ? 'documents' : 'images';
+    if ($type === 'knowledge') $subDir = 'knowledge';
+}
+
 $uploadDir = $baseDir . DIRECTORY_SEPARATOR . $subDir;
+if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
 
-if (!is_dir($uploadDir)) {
-    mkdir($uploadDir, 0755, true);
-}
+// Handle name collisions cleanly (filename-1.pdf, filename-2.pdf)
+$counter = 1;
+$fileNameOnly = preg_replace('/[^a-zA-Z0-9_.-]/', '', pathinfo($originalName, PATHINFO_FILENAME));
+$finalName = $fileNameOnly . '.' . $extension;
 
-// Gallery subfolder if specified
-if (isset($_POST['gallery']) && $_POST['gallery'] === '1') {
-    $uploadDir = $baseDir . DIRECTORY_SEPARATOR . 'gallery';
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
-    }
+while (file_exists($uploadDir . DIRECTORY_SEPARATOR . $finalName)) {
+    $finalName = $fileNameOnly . '-' . $counter . '.' . $extension;
+    $counter++;
 }
+$newFilename = $finalName;
 
 $destination = $uploadDir . DIRECTORY_SEPARATOR . $newFilename;
 
 if (move_uploaded_file($file['tmp_name'], $destination)) {
     // Return relative path for storage in DB
-    $relativePath = 'uploads/' . ($type === 'document' ? 'documents' : (isset($_POST['gallery']) ? 'gallery' : 'images')) . '/' . $newFilename;
+    $relativePath = "uploads/$subDir/$newFilename";
+    
+    // Custom transformation for masked URLs
+    if ($requestedFolder === 'forms') {
+        $relativePath = "f$newFilename";
+    } elseif ($requestedFolder === 'publications' || $requestedFolder === 'textbooks') {
+        $relativePath = $newFilename; // No prefix as requested
+    }
     
     jsonResponse([
         'success' => true,
+        'path' => $relativePath,
         'file_path' => $relativePath,
         'file_name' => $newFilename,
         'file_size' => $file['size'],

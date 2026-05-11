@@ -53,7 +53,14 @@ switch ($action) {
         $data = getPostData();
         validateRequired($data, ['title']);
         $stmt = $pdo->prepare("INSERT INTO gallery_albums (title, description, cover_image, tag, tag_color, sort_order) VALUES (?,?,?,?,?,?)");
-        $stmt->execute([sanitize($data['title']), $data['description'] ?? null, $data['cover_image'] ?? null, sanitize($data['tag'] ?? ''), $data['tag_color'] ?? 'var(--primary)', (int)($data['sort_order'] ?? 0)]);
+        $stmt->execute([
+            sanitize($data['title']), 
+            sanitizeHtml($data['description'] ?? null), 
+            sanitize($data['cover_image'] ?? null), 
+            sanitize($data['tag'] ?? ''), 
+            sanitize($data['tag_color'] ?? 'var(--primary)'), 
+            (int)($data['sort_order'] ?? 0)
+        ]);
         jsonResponse(['success' => true, 'id' => $pdo->lastInsertId()], 201);
         break;
 
@@ -87,6 +94,14 @@ switch ($action) {
         validateRequired($data, ['id']);
         $pdo->prepare("DELETE FROM gallery_photos WHERE id = ?")->execute([(int)$data['id']]);
         jsonResponse(['success' => true]);
+        break;
+
+    case 'get_photos':
+        $album_id = $_GET['album_id'] ?? null;
+        if (!$album_id) jsonError('Album ID required');
+        $stmt = $pdo->prepare("SELECT * FROM gallery_photos WHERE album_id = ? ORDER BY id DESC");
+        $stmt->execute([(int)$album_id]);
+        jsonResponse(['data' => $stmt->fetchAll()]);
         break;
 
     default:

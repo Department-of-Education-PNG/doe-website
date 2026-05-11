@@ -33,6 +33,13 @@ switch ($action) {
         $stmt->execute([sanitize($data['name']), sanitize($data['position_title']), $data['photo_path'] ?? null, $data['message_content'] ?? null, $data['border_color'] ?? '#4a90e2', (int)$data['id']]);
         jsonResponse(['success' => true]);
         break;
+    case 'clear':
+        $data = getPostData();
+        validateRequired($data, ['role']);
+        $stmt = $pdo->prepare("UPDATE leadership_messages SET name=NULL, position_title=NULL, photo_path=NULL, message_content=NULL WHERE role=?");
+        $stmt->execute([sanitize($data['role'])]);
+        jsonResponse(['success' => true]);
+        break;
     default:
         jsonError('Invalid action. Leadership messages can only be updated, not created or deleted.');
 }

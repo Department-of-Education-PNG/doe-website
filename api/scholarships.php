@@ -31,19 +31,23 @@ switch ($action) {
         validateRequired($data, ['title']);
         $stmt = $pdo->prepare("INSERT INTO scholarships (title, description, eligibility, deadline, external_link, status) VALUES (?,?,?,?,?,?)");
         $stmt->execute([sanitize($data['title']), $data['description'] ?? null, $data['eligibility'] ?? null, $data['deadline'] ?? null, $data['external_link'] ?? null, $data['status'] ?? 'open']);
-        jsonResponse(['success' => true, 'id' => $pdo->lastInsertId()], 201);
+        $newId = $pdo->lastInsertId();
+        logActivity('CREATE', 'scholarships', $newId, "Created scholarship: " . $data['title']);
+        jsonResponse(['success' => true, 'id' => $newId], 201);
         break;
     case 'update':
         $data = getPostData();
         validateRequired($data, ['id', 'title']);
         $stmt = $pdo->prepare("UPDATE scholarships SET title=?, description=?, eligibility=?, deadline=?, external_link=?, status=? WHERE id=?");
         $stmt->execute([sanitize($data['title']), $data['description'] ?? null, $data['eligibility'] ?? null, $data['deadline'] ?? null, $data['external_link'] ?? null, $data['status'] ?? 'open', (int)$data['id']]);
+        logActivity('UPDATE', 'scholarships', $data['id'], "Updated scholarship: " . $data['title']);
         jsonResponse(['success' => true]);
         break;
     case 'delete':
         $data = getPostData();
         validateRequired($data, ['id']);
         $pdo->prepare("DELETE FROM scholarships WHERE id = ?")->execute([(int)$data['id']]);
+        logActivity('DELETE', 'scholarships', $data['id'], "Deleted scholarship ID: " . $data['id']);
         jsonResponse(['success' => true]);
         break;
     default:

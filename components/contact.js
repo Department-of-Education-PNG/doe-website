@@ -1,125 +1,149 @@
 window.ContactComponent = {
     render: async () => {
         return `
-            <div style="min-height: 300px; padding: 4rem 1.5rem; display:flex; flex-direction:column; align-items:center; justify-content:center; background: linear-gradient(135deg, rgba(59, 165, 224, 0.6), rgba(14, 32, 64, 0.8), rgba(255, 194, 51, 0.3)), url('assets/images/other-tabs-header-banner/banner-bg.png') center/cover no-repeat; border-bottom: 1px solid var(--glass-border);">
-                <div>
-                    <h1 style="font-size: 3.5rem; text-align: center; margin-bottom: 0;">Contact Us</h1>
-                    <p style="text-align: center; color: var(--text-muted); font-size: 1.2rem;">Get in touch with the Department of Education</p>
-                </div>
-            </div>
-
-            <section class="section-full">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2.5rem; max-width: 1400px; margin: 0 auto;">
-                    
-                    <!-- Google Map Column -->
-                    <div class="card glass-panel" style="padding: 0; overflow: hidden; height: 100%; min-height: 500px;">
-                        <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3964.733512217036!2d147.1866367!3d-9.429285099999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x696fed3a129d3c5b%3A0xe543c79a4db2e18b!2sMinistry%20of%20Education%20-%20Papua%20New%20Guinea!5e0!3m2!1sen!2spg!4v1711500000000!5m2!1sen!2spg" 
-                            width="100%" 
-                            height="100%" 
-                            style="border:0;" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
+            <section class="internal-hero reveal-up">
+                <div class="hero-content-container">
+                    <div class="hero-content">
+                        <h1 class="reveal-up">Contact Us</h1>
+                        <p class="reveal-up">Get in touch with the Department of Education</p>
                     </div>
+                </div>
+            </section>
 
+            <section class="section-full" style="padding: var(--section-spacing) 0;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: var(--grid-gap); max-width: 1400px; margin: 0 auto; padding: 0 2rem;">
+                    
                     <!-- Contact Form Column -->
-                    <div class="card glass-panel" style="padding: 2.5rem;">
+                    <div class="card glass-panel" style="padding: var(--card-padding);">
                         <div style="margin-bottom: 2rem;">
                             <h2 style="font-size: 1.8rem; margin: 0; color: #fff;">Contact us</h2>
                             <div style="width: 40px; height: 3px; background: #2ecc71; margin-top: 0.5rem;"></div>
                         </div>
 
-                        <form id="contact-form" onsubmit="event.preventDefault(); alert('Message sent functionality pending backend integration.');">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
-                                <div>
-                                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem;">First Name <span style="color: #e74c3c;">*</span></label>
-                                    <input type="text" placeholder="First Name" required style="width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: #fff; outline: none;">
+                        <form id="contact-form">
+                            <div class="grid-2" style="margin-bottom: 1.5rem;">
+                                <div class="form-group">
+                                    <label class="form-label">First Name <span>*</span></label>
+                                    <input type="text" name="first_name" placeholder="First Name" required class="form-input">
                                 </div>
-                                <div>
-                                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem;">Last Name <span style="color: #e74c3c;">*</span></label>
-                                    <input type="text" placeholder="Last Name" required style="width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: #fff; outline: none;">
-                                </div>
-                            </div>
-
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
-                                <div>
-                                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem;">Email <span style="color: #e74c3c;">*</span></label>
-                                    <input type="email" placeholder="Email address" required style="width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: #fff; outline: none;">
-                                </div>
-                                <div>
-                                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem;">Mobile <span style="color: #e74c3c;">*</span></label>
-                                    <input type="tel" placeholder="Telephone Number" required style="width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: #fff; outline: none;">
+                                <div class="form-group">
+                                    <label class="form-label">Last Name <span>*</span></label>
+                                    <input type="text" name="last_name" placeholder="Last Name" required class="form-input">
                                 </div>
                             </div>
 
-                            <div style="margin-bottom: 2rem;">
-                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem;">Comments</label>
-                                <textarea rows="6" placeholder="Type comments" style="width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: #fff; outline: none; font-family: inherit; resize: none;"></textarea>
+                            <div class="grid-2" style="margin-bottom: 1.5rem;">
+                                <div class="form-group">
+                                    <label class="form-label">Email <span>*</span></label>
+                                    <input type="email" name="email" placeholder="Email address" required class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Mobile <span>*</span></label>
+                                    <input type="tel" name="phone" placeholder="Telephone Number" required class="form-input">
+                                </div>
                             </div>
 
-                            <button type="submit" class="btn-primary" style="padding: 1rem 2rem; border-radius: 4px; border: none; cursor: pointer; transition: 0.3s; font-weight: 600; width: 220px;">Send your message</button>
+                            <div class="form-group">
+                                <label class="form-label">Subject <span>*</span></label>
+                                <input type="text" name="subject" placeholder="Subject" required class="form-input">
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 2.5rem;">
+                                <label class="form-label">Comments <span>*</span></label>
+                                <textarea name="message" placeholder="Type comments" required class="form-textarea"></textarea>
+                            </div>
+
+                            <button type="submit" id="submit-btn" class="btn-primary" style="width: 100%; max-width: 280px; display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
+                                <i data-lucide="send"></i>
+                                <span>Send your message</span>
+                            </button>
                         </form>
                     </div>
 
                     <!-- Contact Info Column -->
-                    <div class="card glass-panel" style="padding: 2.5rem;">
-                        <div style="margin-bottom: 3rem;">
+                    <div class="card glass-panel" style="padding: var(--card-padding);">
+                        <div style="margin-bottom: 2rem;">
                             <h2 style="font-size: 1.8rem; margin: 0; color: #fff;">Get in touch</h2>
                             <div style="width: 40px; height: 3px; background: #2ecc71; margin-top: 0.5rem;"></div>
                         </div>
 
-                        <div style="display: flex; gap: 1.5rem; margin-bottom: 2.5rem;">
-                            <div style="width: 50px; height: 50px; border-radius: 50%; background: rgba(243, 156, 18, 0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                <span style="font-size: 1.5rem; color: #f39c12;">📍</span>
+                        <div style="display: flex; flex-direction: column; gap: 2rem;">
+                            <div style="display: flex; gap: 1.5rem; align-items: flex-start;">
+                                <div style="width: 54px; height: 54px; border-radius: 14px; background: rgba(59, 165, 224, 0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(59, 165, 224, 0.2);">
+                                    <i data-lucide="map-pin" style="color: var(--primary); width: 24px; height: 24px;"></i>
+                                </div>
+                                <div>
+                                    <h4 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.2rem;">Location</h4>
+                                    <div style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.6;">
+                                        <p style="color: #fff; font-weight: 500; margin-bottom: 0.2rem;">Department of Education</p>
+                                        <p>P.O Box 446, Waigani</p>
+                                        <p>National Capital District</p>
+                                        <p>Papua New Guinea</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.7;">
-                                <h4 style="color: #fff; margin-bottom: 0.2rem; font-size: 1.1rem;">Department of Education</h4>
-                                <p>P.O Box 446</p>
-                                <p>Waigani</p>
-                                <p>National Capital District</p>
-                                <p>Papua New Guinea</p>
-                            </div>
-                        </div>
 
-                        <div style="display: flex; gap: 1.5rem; margin-bottom: 2.5rem;">
-                            <div style="width: 50px; height: 50px; border-radius: 50%; background: rgba(231, 76, 60, 0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                <span style="font-size: 1.5rem; color: #e74c3c;">✉️</span>
+                            <div style="display: flex; gap: 1.5rem; align-items: flex-start;">
+                                <div style="width: 54px; height: 54px; border-radius: 14px; background: rgba(46, 204, 113, 0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(46, 204, 113, 0.2);">
+                                    <i data-lucide="mail" style="color: #2ecc71; width: 24px; height: 24px;"></i>
+                                </div>
+                                <div>
+                                    <h4 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.2rem;">Email Support</h4>
+                                    <div style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.6;">
+                                        <p style="margin-bottom: 0.8rem;">General Enquiries:</p>
+                                        <p style="margin-bottom: 1.2rem;"><a href="mailto:enquiries@education.gov.pg" style="color: var(--primary); font-weight: 600; text-decoration: none;">enquiries@education.gov.pg</a></p>
+                                        <p style="margin-bottom: 0.8rem;">Payroll Enquiries:</p>
+                                        <p><a href="mailto:payenquiry@education.gov.pg" style="color: var(--primary); font-weight: 600; text-decoration: none;">payenquiry@education.gov.pg</a></p>
+                                    </div>
+                                </div>
                             </div>
-                            <div style="color: var(--text-muted); font-size: 1.05rem;">
-                                <p style="margin-bottom: 0.8rem;">For General Enquiries send your email to:</p>
-                                <p><a href="mailto:enquiries@education.gov.pg" style="color: #fff; font-weight: 600;">enquiries@education.gov.pg</a></p>
-                                <p style="margin: 1rem 0 0.8rem;">For Payroll Enquiries, send your email to:</p>
-                                <p><a href="mailto:payenquiry@education.gov.pg" style="color: #fff; font-weight: 600;">payenquiry@education.gov.pg</a></p>
-                            </div>
-                        </div>
 
-                        <div style="display: flex; gap: 1.5rem;">
-                            <div style="width: 50px; height: 50px; border-radius: 50%; background: rgba(52, 152, 219, 0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                <span style="font-size: 1.5rem; color: #3498db;">📱</span>
-                            </div>
-                            <div style="color: var(--text-muted); font-size: 1.05rem;">
-                                <p style="margin-bottom: 0.5rem;">Main Phone Line :</p>
-                                <p style="color: #fff; font-weight: 600; margin-bottom: 1rem;">+675 328 8800</p>
-                                <p style="margin-bottom: 0.5rem;">Teaching Service Commission Phone :</p>
-                                <p style="color: #fff; font-weight: 600;">+675 328 8890</p>
+                            <div style="display: flex; gap: 1.5rem; align-items: flex-start;">
+                                <div style="width: 54px; height: 54px; border-radius: 14px; background: rgba(255, 194, 51, 0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(255, 194, 51, 0.2);">
+                                    <i data-lucide="phone" style="color: var(--accent); width: 24px; height: 24px;"></i>
+                                </div>
+                                <div>
+                                    <h4 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.2rem;">Phone Lines</h4>
+                                    <div style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.6;">
+                                        <div style="margin-bottom: 1rem;">
+                                            <p style="font-size: 0.9rem; margin-bottom: 0.2rem;">Main Office:</p>
+                                            <p style="color: #fff; font-weight: 600; font-size: 1.1rem;">+675 328 8800</p>
+                                        </div>
+                                        <div>
+                                            <p style="font-size: 0.9rem; margin-bottom: 0.2rem;">TSC Hotline:</p>
+                                            <p style="color: #fff; font-weight: 600; font-size: 1.1rem;">+675 328 8890</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
+                <!-- Google Map (Full width under cards) -->
+                <div style="max-width: 1400px; margin: var(--grid-gap) auto 0; padding: 0 2rem;">
+                    <div class="card glass-panel" style="padding: 0; overflow: hidden; min-height: 500px; border-radius: 24px;">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3964.733512217036!2d147.1866367!3d-9.429285099999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x696fed3a129d3c5b%3A0xe543c79a4db2e18b!2sMinistry%20of%20Education%20-%20Papua%20New%20Guinea!5e0!3m2!1sen!2spg!4v1711500000000!5m2!1sen!2spg" 
+                            style="width: 100%; height: 500px; border:0; display: block;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
                 </div>
             </section>
-            <section class="section-full" style="background: rgba(14, 32, 64, 0.4); border-top: 1px solid var(--glass-border); padding-top: 5rem; padding-bottom: 5rem;">
+            <section class="section-full" style="border-top: 1px solid var(--glass-border); padding: var(--section-spacing) 0;">
                 <div style="max-width: 1400px; margin: 0 auto;">
-                    <div style="margin-bottom: 3rem;">
+                    <div style="margin-bottom: var(--header-margin);">
                         <h2 style="font-size: 2rem; margin: 0; color: #fff;">Divisions Contact Details</h2>
                         <div style="width: 60px; height: 3px; background: #3ba5e0; margin-top: 0.5rem;"></div>
                         <p style="color: var(--text-muted); margin-top: 1rem; font-size: 1.1rem;">Direct and extension numbers for all department divisions.</p>
                     </div>
 
-                    <div class="card glass-panel" style="overflow-x: auto; border-radius: 20px; padding: 1rem;">
-                        <table style="width: 100%; border-collapse: separate; border-spacing: 0; color: #fff; text-align: left;">
+                    <div class="table-scroll-wrap glass-panel" style="border-radius: 20px; padding: 1rem;">
+                        <div class="table-inner">
+                        <table class="glass-table" style="min-width: 600px;">
                             <thead>
                                 <tr>
                                     <th style="padding: 1.5rem; border-bottom: 2px solid rgba(255,255,255,0.1); color: #3ba5e0; font-weight: 700; font-size: 1.1rem;">Divisions</th>
@@ -255,10 +279,11 @@ window.ContactComponent = {
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
+                        </div><!-- /table-inner -->
+                    </div><!-- /table-scroll-wrap -->
                 </div>
             </section>
-            <section class="section-full" style="background: rgba(14, 32, 64, 0.2); border-top: 1px solid var(--glass-border); padding-top: 5rem; padding-bottom: 5rem;">
+            <section class="section-full" style="border-top: 1px solid var(--glass-border); padding: var(--section-spacing) 0;">
                 <div style="max-width: 1400px; margin: 0 auto;">
                     <div style="margin-bottom: 3rem;">
                         <h2 style="font-size: 2rem; margin: 0; color: #fff;">Provincial Division of Education Contacts</h2>
@@ -266,8 +291,9 @@ window.ContactComponent = {
                         <p style="color: var(--text-muted); margin-top: 1rem; font-size: 1.1rem;">Direct contact numbers for educational offices across all provinces and regions.</p>
                     </div>
 
-                    <div class="card glass-panel" style="overflow-x: auto; border-radius: 20px; padding: 1.5rem;">
-                        <table style="width: 100%; border-collapse: separate; border-spacing: 0; color: #fff; text-align: left; table-layout: fixed;">
+                    <div class="table-scroll-wrap glass-panel" style="border-radius: 20px; padding: 1.5rem;">
+                        <div class="table-inner">
+                        <table class="glass-table" style="min-width: 700px; table-layout: fixed;">
                             <thead>
                                 <tr>
                                     <th style="padding: 1.5rem; border-bottom: 3px solid rgba(59, 165, 224, 0.3); color: #fff; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; width: 25%;">SOUTHERN REGION</th>
@@ -424,10 +450,67 @@ window.ContactComponent = {
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
+                        </div><!-- /table-inner -->
+                    </div><!-- /table-scroll-wrap -->
                 </div>
             </section>
         `;
+    },
+    afterRender: async () => {
+        // Initialize Lucide icons
+        if (window.lucide) {
+            window.lucide.createIcons();
+        }
+
+        const form = document.querySelector('#contact-form');
+        const submitBtn = document.querySelector('#submit-btn');
+
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const originalBtnText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-2 spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> <span>Sending...</span>';
+                lucide.createIcons();
+
+                const formData = new FormData(form);
+                const data = {
+                    name: `${formData.get('first_name')} ${formData.get('last_name')}`,
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    subject: formData.get('subject'),
+                    message: formData.get('message')
+                };
+
+                try {
+                    const response = await fetch('api/contact.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        form.reset();
+                        const status = result.email_sent ? 'and notification sent.' : 'but there was an issue sending the email notification.';
+                        window.showToast(`✅ Thank you! Your message has been received ${status}`);
+                    } else {
+                        window.showToast('❌ Error: ' + (result.error || 'Something went wrong.'), 'error');
+                    }
+                } catch (error) {
+                    console.error('Contact submit error:', error);
+                    window.showToast('❌ Connection failed. Please check your internet.', 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                    lucide.createIcons();
+                }
+            });
+        }
     }
 };
 

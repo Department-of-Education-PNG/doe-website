@@ -10,6 +10,13 @@ jsonHeaders();
 $pdo = Database::getInstance()->getConnection();
 $action = $_GET['action'] ?? '';
 
+// Public: Increment view
+if ($action === 'increment_view' && isset($_GET['id'])) {
+    $stmt = $pdo->prepare("UPDATE press_releases SET views = views + 1 WHERE id = ?");
+    $stmt->execute([(int)$_GET['id']]);
+    jsonResponse(['success' => true]);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && empty($action)) {
     $pagination = getPagination();
     
@@ -41,20 +48,39 @@ switch ($action) {
         $data = getPostData();
         validateRequired($data, ['title', 'date_published']);
         $stmt = $pdo->prepare("INSERT INTO press_releases (title, summary, image_path, pdf_path, date_published, status) VALUES (?,?,?,?,?,?)");
-        $stmt->execute([sanitize($data['title']), $data['summary'] ?? null, $data['image_path'] ?? null, $data['pdf_path'] ?? null, $data['date_published'], $data['status'] ?? 'draft']);
-        jsonResponse(['success' => true, 'id' => $pdo->lastInsertId()], 201);
+        $stmt->execute([
+            sanitize($data['title']), 
+            sanitizeHtml($data['summary'] ?? null), 
+            sanitize($data['image_path'] ?? null), 
+            sanitize($data['pdf_path'] ?? null), 
+            sanitize($data['date_published']), 
+            sanitize($data['status'] ?? 'draft')
+        ]);
+        $newId = $pdo->lastInsertId();
+        logActivity('CREATE', 'press_releases', $newId, "Created press release: " . $data['title']);
+        jsonResponse(['success' => true, 'id' => $newId], 201);
         break;
     case 'update':
         $data = getPostData();
         validateRequired($data, ['id', 'title']);
         $stmt = $pdo->prepare("UPDATE press_releases SET title=?, summary=?, image_path=?, pdf_path=?, date_published=?, status=? WHERE id=?");
-        $stmt->execute([sanitize($data['title']), $data['summary'] ?? null, $data['image_path'] ?? null, $data['pdf_path'] ?? null, $data['date_published'] ?? date('Y-m-d'), $data['status'] ?? 'draft', (int)$data['id']]);
+        $stmt->execute([
+            sanitize($data['title']), 
+            sanitizeHtml($data['summary'] ?? null), 
+            sanitize($data['image_path'] ?? null), 
+            sanitize($data['pdf_path'] ?? null), 
+            sanitize($data['date_published'] ?? date('Y-m-d')), 
+            sanitize($data['status'] ?? 'draft'), 
+            (int)$data['id']
+        ]);
+        logActivity('UPDATE', 'press_releases', $data['id'], "Updated press release: " . $data['title']);
         jsonResponse(['success' => true]);
         break;
     case 'delete':
         $data = getPostData();
         validateRequired($data, ['id']);
         $pdo->prepare("DELETE FROM press_releases WHERE id = ?")->execute([(int)$data['id']]);
+        logActivity('DELETE', 'press_releases', $data['id'], "Deleted press release ID: " . $data['id']);
         jsonResponse(['success' => true]);
         break;
     default:

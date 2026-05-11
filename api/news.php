@@ -12,6 +12,13 @@ jsonHeaders();
 $pdo = Database::getInstance()->getConnection();
 $action = $_GET['action'] ?? '';
 
+// Public: Increment view
+if ($action === 'increment_view' && isset($_GET['id'])) {
+    $stmt = $pdo->prepare("UPDATE news_articles SET views = views + 1 WHERE id = ?");
+    $stmt->execute([(int)$_GET['id']]);
+    jsonResponse(['success' => true]);
+}
+
 // Public endpoints
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && empty($action)) {
     $pagination = getPagination();
@@ -26,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && empty($action)) {
 
     if (isset($_GET['slug'])) {
         $stmt = $pdo->prepare("SELECT * FROM news_articles WHERE slug = ? AND status = 'published'");
-        $stmt->execute([$_GET['slug']]);
+        $stmt->execute([sanitizeSlug($_GET['slug'])]);
         $article = $stmt->fetch();
         if (!$article) jsonError('Article not found', 404);
         jsonResponse($article);
@@ -86,15 +93,17 @@ switch ($action) {
         $stmt = $pdo->prepare("INSERT INTO news_articles (title, slug, summary, content, image_path, date_published, is_featured, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             sanitize($data['title']),
-            $slug,
-            $data['summary'] ?? null,
-            $data['content'] ?? null,
-            $data['image_path'] ?? null,
-            $data['date_published'],
+            sanitizeSlug($slug),
+            sanitize($data['summary'] ?? null),
+            sanitizeHtml($data['content'] ?? null),
+            sanitize($data['image_path'] ?? null),
+            sanitize($data['date_published']),
             (int)($data['is_featured'] ?? 0),
-            $data['status'] ?? 'draft'
+            sanitize($data['status'] ?? 'draft')
         ]);
-        jsonResponse(['success' => true, 'id' => $pdo->lastInsertId()], 201);
+        $newId = $pdo->lastInsertId();
+        logActivity('CREATE', 'news_articles', $newId, "Created news article: " . $data['title']);
+        jsonResponse(['success' => true, 'id' => $newId], 201);
         break;
 
     case 'update':
@@ -104,14 +113,15 @@ switch ($action) {
         $stmt = $pdo->prepare("UPDATE news_articles SET title=?, summary=?, content=?, image_path=?, date_published=?, is_featured=?, status=? WHERE id=?");
         $stmt->execute([
             sanitize($data['title']),
-            $data['summary'] ?? null,
-            $data['content'] ?? null,
-            $data['image_path'] ?? null,
-            $data['date_published'],
+            sanitize($data['summary'] ?? null),
+            sanitizeHtml($data['content'] ?? null),
+            sanitize($data['image_path'] ?? null),
+            sanitize($data['date_published']),
             (int)($data['is_featured'] ?? 0),
-            $data['status'] ?? 'draft',
+            sanitize($data['status'] ?? 'draft'),
             (int)$data['id']
         ]);
+        logActivity('UPDATE', 'news_articles', $data['id'], "Updated news article: " . $data['title']);
         jsonResponse(['success' => true]);
         break;
 
@@ -119,6 +129,7 @@ switch ($action) {
         $data = getPostData();
         validateRequired($data, ['id']);
         $pdo->prepare("DELETE FROM news_articles WHERE id = ?")->execute([(int)$data['id']]);
+        logActivity('DELETE', 'news_articles', $data['id'], "Deleted news article ID: " . $data['id']);
         jsonResponse(['success' => true]);
         break;
 

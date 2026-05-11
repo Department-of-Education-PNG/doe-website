@@ -1,157 +1,126 @@
 window.AboutComponent = {
     render: async () => {
         return `
-            <div style="min-height: 300px; padding: 4rem 1.5rem; display:flex; flex-direction:column; align-items:center; justify-content:center; background: linear-gradient(135deg, rgba(0, 112, 243, 0.6), rgba(10, 13, 20, 0.8), rgba(245, 166, 35, 0.3)), url('assets/images/other-tabs-header-banner/banner-bg.png') center/cover no-repeat; border-bottom: 1px solid var(--glass-border);">
-                <div>
-                    <h1 style="font-size: 3.5rem; text-align: center; margin-bottom: 0;">About Us</h1>
-                    <p style="text-align: center; color: var(--text-muted); font-size: 1.2rem;">Our Mandate & Leadership</p>
+            <section class="internal-hero reveal-up">
+                <div class="hero-content-container">
+                    <div class="hero-content">
+                        <h1 class="reveal-up">About Us</h1>
+                        <p class="reveal-up hero-p" style="color: #d4e5f7;">Empowering the future of Papua New Guinea through quality education and inclusive learning.</p>
+                    </div>
                 </div>
-            </div>
+            </section>
 
-            <section id="mission-vision" class="section-full">
-                <div class="grid-2" style="align-items: flex-start; gap: 4rem;">
-                    <div>
-                        <h2 style="color: var(--primary); font-size: 2.8rem; margin-bottom: 2rem;">DEPARTMENT OF EDUCATION</h2>
-                        <p style="font-size: 1.15rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 2.5rem;">
-                            The Department of Education leads the delivery of education services to children, young people and adults both directly through government schools and indirectly through the regulation and funding of permitted private schools. We implement the PNG Government policy on early childhood, general school education and vocational training.
+            <section id="mission-vision" class="section-full reveal-up" style="padding: var(--section-spacing) 0; border-bottom: 1px solid var(--glass-border);">
+                <div class="grid-2" style="align-items: flex-start; gap: var(--grid-gap);">
+                    <div class="text-left">
+                        <h2 class="section-title" style="margin-bottom: 2rem;">Department of Education</h2>
+                        <p class="section-p" style="color: var(--text-muted); line-height: 1.8; margin-bottom: 3rem;">
+                            The Department of Education leads the delivery of education services across Papua New Guinea, directly managing government schools and regulating the private sector. We are committed to implementing national policies that promote quality education for all citizens.
                         </p>
                         
-                        <div style="background: rgba(255, 255, 255, 0.03); padding: 2.5rem; border-radius: 20px; border: 1px solid var(--glass-border);">
-                            <h3 style="color: var(--accent); margin-bottom: 1.5rem; font-size: 1.5rem;">Core Functions</h3>
-                            <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; color: var(--text-muted);">
-                                <div style="display: flex; align-items: center; gap: 10px; font-weight: 500;"><span style="color: var(--accent);">✓</span> Curriculum and Examinations</div>
-                                <div style="display: flex; align-items: center; gap: 10px; font-weight: 500;"><span style="color: var(--accent);">✓</span> Education Standards</div>
-                                <div style="display: flex; align-items: center; gap: 10px; font-weight: 500;"><span style="color: var(--accent);">✓</span> National Education Policies & Plans</div>
-                                <div style="display: flex; align-items: center; gap: 10px; font-weight: 500;"><span style="color: var(--accent);">✓</span> National Institutions – National Schools of Excellence</div>
-                                <div style="display: flex; align-items: center; gap: 10px; font-weight: 500;"><span style="color: var(--accent);">✓</span> Teacher Management (TSC) – Payroll – DoE</div>
-                                <div style="display: flex; align-items: center; gap: 10px; font-weight: 500;"><span style="color: var(--accent);">✓</span> Government Tuition Fee Policy</div>
+                        <div class="card glass-panel" style="padding: var(--card-padding); border-radius: 32px; border: 1px solid var(--glass-border); background: var(--bg-card);">
+                            <h3 style="color: var(--accent); margin-bottom: 2rem; font-size: 1.6rem; font-weight: 700; display: flex; align-items: center; gap: 1rem;">
+                                <div style="width: 12px; height: 12px; border-radius: 50%; background: var(--accent);"></div>
+                                Core Departmental Functions
+                            </h3>
+                            <div style="display: grid; grid-template-columns: 1fr; gap: 1.2rem; color: var(--text-muted);">
+                                ${[
+                                    'Curriculum Development & Examinations',
+                                    'Maintaining Educational Standards',
+                                    'National Education Policies & Strategic Planning',
+                                    'National Schools of Excellence Management',
+                                    'Teacher Management & Payroll Systems',
+                                    'Government Tuition Fee (GTF) Policy Oversight'
+                                ].map(item => `
+                                    <div style="display: flex; align-items: center; gap: 1rem; font-weight: 600; font-size: 1rem;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                        ${item}
+                                    </div>
+                                `).join('')}
                             </div>
                         </div>
                     </div>
-
-                    <div class="img-wrapper" style="border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid var(--glass-border);">
-                        <img src="assets/images/about/Students_promoting_their_cultural_heritage.jpg" alt="About DoE PNG" style="width: 100%; height: 650px; object-fit: cover;" onerror="this.src='https://placehold.co/800x1200/0a0d14/ffffff?text=Department+of+Education+PNG'">
+                     <div class="img-wrapper" style="border-radius: 32px; overflow: hidden; box-shadow: 0 30px 60px -12px rgba(0,0,0,0.6); border: 1px solid var(--glass-border);">
+                        <img src="assets/images/about/Students_promoting_their_cultural_heritage.jpg" alt="DoE PNG Students" class="responsive-img-height" style="width: 100%; height: 750px; object-fit: cover; transition: transform 0.6s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onerror="this.src='https://placehold.co/800x1200/0a0d14/ffffff?text=Department+of+Education+PNG'">
                     </div>
                 </div>
             </section>
 
-            <section class="section-full" style="padding-top: 0;">
-                <div class="grid-2" style="gap: 2rem;">
-                    <div class="card glass-panel" style="border-left: 4px solid var(--primary);">
-                        <h3 style="color: var(--primary);">Our Mandate</h3>
-                        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">
-                            The Department of Education is the executive and inspectorial branch of the National Education System. It derives its powers from the Education Act 1983 (amended 1995) and any other law relating to education matters. DoE is also subjected to Section 42 of the Organic Law on Provincial Governments and Local level Governments.
+            <section class="section-full reveal-up" style="padding: var(--section-spacing) 0; border-bottom: 1px solid var(--glass-border);">
+                <div class="grid-2" style="gap: var(--grid-gap); align-items: stretch;">
+                    <div class="card glass-panel" style="padding: var(--card-padding); border-left: 5px solid var(--primary); background: var(--bg-deeper); display: flex; flex-direction: column; height: 100%;">
+                        <h3 style="color: var(--primary); margin-bottom: 1.5rem; font-weight: 700; font-size: 1.25rem;">Institutional Mandate</h3>
+                        <p class="section-p" style="color: var(--text-muted); line-height: 1.8; margin: 0; flex-grow: 1; font-size: 0.95rem;">
+                            The Department of Education serves as the executive branch of the National Education System, deriving authority from the Education Act 1983. We ensure compliance with national standards while facilitating provincial administrative service delivery.
                         </p>
                     </div>
-                    <div class="card glass-panel" style="border-left: 4px solid var(--accent);">
-                        <h3 style="color: var(--accent);">Department Head</h3>
-                        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">
-                            The head of the Department of Education is the Secretary for Education. The Secretary also chairs the National Education Board. The Secretary is the chief executive of the National Education System and is responsible under the Minister for the provision of administrative services to the National Education Board and for determining the qualifications and standards required for registration of teachers, inspection of schools, and certification of teachers.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="section-full" style="background: rgba(10, 13, 20, 0.4); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);">
-                <h2 class="section-title" style="margin-bottom: 3.5rem;">The Ministry of Education</h2>
-                <div class="grid-3">
-                    <div class="card glass-panel">
-                        <div style="font-size: 2rem; margin-bottom: 1rem;">🏛️</div>
-                        <h3 style="color: #fff;">Minister for Education</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
-                            The political head responsible for the overall management of education through the Ministry, which comprises the NDoE, OLA and TSC. The Minister has responsibility for control of the curriculum, including content, standards, examinations, minimum entry age, teaching days, and language of instruction.
-                        </p>
-                    </div>
-                    <div class="card glass-panel">
-                        <div style="font-size: 2rem; margin-bottom: 1rem;">🏢</div>
-                        <h3 style="color: #fff;">National Dept. (NDoE)</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
-                            Determines national policies and supports provincial implementation via planning, research, and training. Responsible for teacher registration, curriculum materials, national high schools, FODE centres, and the disbursement of school funds.
-                        </p>
-                    </div>
-                    <div class="card glass-panel">
-                        <div style="font-size: 2rem; margin-bottom: 1rem;">📚</div>
-                        <h3 style="color: #fff;">Libraries & Archives (OLA)</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
-                            Comprises the National Library Service, National Archives, and Corporate Services. Co-ordinates the planning of libraries and archives nationwide, with a primary objective to preserve all documents on Papua New Guinea life and society.
-                        </p>
-                    </div>
-                    <div class="card glass-panel">
-                        <div style="font-size: 2rem; margin-bottom: 1rem;">🤝</div>
-                        <h3 style="color: #fff;">Teaching Service Commission</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
-                            Acts as the agent of the state for the employment of teachers. Oversees terms and conditions of service, salaries, and welfare, while supporting the fundamental rights of teachers across the country.
-                        </p>
-                    </div>
-                    <div class="card glass-panel">
-                        <div style="font-size: 2rem; margin-bottom: 1rem;">⚖️</div>
-                        <h3 style="color: #fff;">National Education Board</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
-                            The highest decision-making body, overseeing the system functioning and NEP implementation. Advises the minister in consultation with TSC and provincial boards. The Secretary for Education serves as the statutory chairman.
+                    <div class="card glass-panel" style="padding: var(--card-padding); border-left: 5px solid var(--accent); background: var(--bg-deeper); display: flex; flex-direction: column; height: 100%;">
+                        <h3 style="color: var(--accent); margin-bottom: 1.5rem; font-weight: 700; font-size: 1.25rem;">Executive Leadership</h3>
+                        <p class="section-p" style="color: var(--text-muted); line-height: 1.8; margin: 0; flex-grow: 1; font-size: 0.95rem;">
+                            The Secretary for Education leads the Department as the chief executive. Responsibilities include chairing the National Education Board and determining the qualification standards required for teacher registration and institutional certification.
                         </p>
                     </div>
                 </div>
             </section>
 
-            <section class="section-full">
-                <h2 class="section-title">Regional & Community Governance</h2>
-                <div style="display: flex; flex-direction: column; gap: 2.5rem;">
-                    
-                    <div class="card glass-panel governance-card">
-                        <h3 style="color: var(--primary); font-size: 1.3rem; margin: 0;">Provincial Governments</h3>
-                        <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem; line-height: 1.7;">
-                            Responsible for establishing, building and maintaining schools. Provinces deploy teachers and employ provincial education officers. Education Function Grants must be spent on operating costs and maintenance, with at least half allocated to district minimum priority activities.
-                        </p>
-                    </div>
-
-                    <div class="card glass-panel governance-card">
-                        <h3 style="color: var(--primary); font-size: 1.3rem; margin: 0;">Education Boards (PEB/LLG)</h3>
-                        <div style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7;">
-                            The <strong>Provincial Education Board (PEB)</strong> is the highest decision-making body in a province, chaired by the Provincial Education Adviser. <strong>District Boards</strong> include district stakeholders as members. <strong>Local-Level Government (LLG)</strong> funds and maintains elementary/primary schools while helping with provincial plan consistency.
+            <section class="section-full reveal-up" style="padding: var(--section-spacing) 0; border-bottom: 1px solid var(--glass-border);">
+                <div class="section-header text-left" style="margin-bottom: var(--header-margin); display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; width: 100%; text-align: left;">
+                    <h2 class="section-title" style="margin-bottom: 0.5rem; text-align: left; width: 100%; display: block;">The Ministry of Education</h2>
+                    <p class="section-p" style="color: var(--text-muted); margin-left: 0; text-align: left; width: 100%; display: block;">Governing bodies responsible for the National Education System.</p>
+                </div>
+                <div class="grid-4" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--grid-gap);">
+                    ${[
+                        { icon: '🏛️', title: 'Minister for Education', text: 'The political head responsible for curriculum control, standards, and examinations.' },
+                        { icon: '🏢', title: 'National Dept. (NDoE)', text: 'Determines national policies and supports provincial implementation via research and training.' },
+                        { icon: '📚', title: 'Libraries & Archives (OLA)', text: 'Coordinates libraries and archives nationwide, preserving PNG history.' },
+                        { icon: '🤝', title: 'Teaching Service Comm.', text: 'The employing agent for teachers, overseeing welfare and employment conditions.' },
+                        { icon: '⚖️', title: 'National Education Board', text: 'The highest decision-making body overseeing the system functioning.' },
+                        { icon: '🌍', title: 'UNESCO Commission', text: 'Promotes education, science, and culture in partnership with the global community.' }
+                    ].map(item => `
+                        <div class="card glass-panel flex-col" style="padding: var(--card-padding); border-radius: 20px; transition: all 0.4s ease; background: var(--bg-card); display: flex; flex-direction: column; height: 100%;">
+                            <div style="font-size: 2.2rem; margin-bottom: 1.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));">${item.icon}</div>
+                            <h3 style="color: #fff; font-size: 1.25rem; margin-bottom: 1rem; font-weight: 700; line-height: 1.4;">${item.title}</h3>
+                            <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin: 0; flex-grow: 1;">${item.text}</p>
                         </div>
-                    </div>
-
-                    <div class="card glass-panel governance-card">
-                        <h3 style="color: var(--accent); font-size: 1.3rem; margin: 0;">Education Agencies</h3>
-                        <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem; line-height: 1.7;">
-                            Key partners including faith-based and private agencies. They establish and conduct member schools with varied student entry criteria. Agencies impose common fees on parents to cover operations, learning materials, and staff payments. Each agency has an education secretary for communication.
-                        </p>
-                    </div>
-
-                    <div class="card glass-panel governance-card">
-                        <h3 style="color: var(--primary); font-size: 1.3rem; margin: 0;">School Boards (BOM/BOG)</h3>
-                        <p style="color: var(--text-muted); margin: 0; font-size: 0.95rem; line-height: 1.7;">
-                            Governing boards include **Boards of Management (BOM)** for elementary/primary and **Boards of Governors (BOG)** for secondary/post-primary schools. They have financial, management, and disciplinary powers. Communities share responsibility for infrastructure and teacher housing.
-                        </p>
-                    </div>
-
+                    `).join('')}
                 </div>
             </section>
-            
-            <section class="section-full">
-                <h2 class="section-title">Organizational Structure</h2>
-                <div class="body genealogy-body genealogy-scroll">
+
+            <section class="section-full reveal-up" style="padding: var(--section-spacing) 0;">
+                <div class="section-header text-left" style="margin-bottom: var(--header-margin); display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; width: 100%; text-align: left;">
+                    <h2 class="section-title" style="margin-bottom: 0px; text-align: left; width: 100%; display: block;">Regional Governance</h2>
+                    <p class="section-p" style="color: var(--text-muted); margin-top: 0.5rem; margin-left: 0; text-align: left; width: 100%; display: block;">Structural breakdown of educational oversight across PNG provinces.</p>
+                </div>
+                <div class="grid-2-to-4" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--grid-gap);">
+                    ${[
+                        { border: 'var(--primary)', title: 'Provincial Governments', text: 'Responsible for establishing and maintaining schools, deploying teachers, and managing education function grants.' },
+                        { border: 'var(--primary)', title: 'Education Boards (PEB/LLG)', text: 'Highest decision-making bodies locally, including Provincial (PEB) and Local-Level Government (LLG) stakeholders.' },
+                        { border: 'var(--accent)', title: 'Education Agencies', text: 'Faith-based and private partners that establish member schools and coordinate with the national system.' },
+                        { border: 'var(--primary)', title: 'School Boards (BOM/BOG)', text: 'Governing boards for schools with financial, management, and disciplinary powers.' }
+                    ].map(item => `
+                        <div class="card glass-panel" style="padding: var(--card-padding); display: flex !important; flex-direction: column !important; gap: 1rem; border-left: 8px solid ${item.border}; background: rgba(14, 32, 64, 0.4); border-radius: 20px;">
+                            <h3 style="color: #fff; margin-bottom: 0.5rem; font-weight: 800;">${item.title}</h3>
+                            <p style="color: var(--text-muted); margin: 0; line-height: 1.7;">${item.text}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            </section>
+
+            <section class="section-full reveal-up hierarchy-section" style="padding: var(--section-spacing) 0; border-top: 1px solid var(--glass-border);">
+                <div class="section-header" style="align-items: center !important; text-align: center !important;">
+                    <h2 class="section-title" style="text-align: center !important;">Organizational Hierarchy</h2>
+                    <p class="section-p" style="color: var(--text-muted); margin: 0 auto; text-align: center !important;">Institutional architecture of the Department of Education, Papua New Guinea.</p>
+                </div>
+                
+                <div class="genealogy-scroll">
                     <div class="genealogy-tree">
                         <ul>
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <div class="member-view-box">
-                                        <div class="member-image">
-                                            <div class="member-details">
-                                                <h3>MINISTER</h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <ul class="active main-ul">
                                     <li>
                                         <a href="javascript:void(0);">
                                             <div class="member-view-box">
                                                 <div class="member-image">
                                                     <div class="member-details">
-                                                        <h3 align="center">DIRECTOR GENERAL<br>
-                                                        Office of Libraries & Archives<br>
-                                                        </h3>
+                                                        <h3>DIRECTOR GENERAL<br>Office of Libraries & Archives</h3>
                                                     </div>
                                                 </div>
                                             </div>
@@ -820,19 +789,6 @@ window.AboutComponent = {
                                                                 <div class="member-image">
                                                                     <div class="member-details">
                                                                         <h3>FAS<br>School Grant</h3>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                        <ul>
-                                                            <li><a href="javascript:void(0);"><div class="member-view-box"><div class="member-image"><div class="member-details"><h3>AS<br>Policy & Quality Assurance</h3></div></div></div></a></li>
-                                                            <li><a href="javascript:void(0);"><div class="member-view-box"><div class="member-image"><div class="member-details"><h3>AS<br>Finance & Administration</h3></div></div></div></a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:void(0);">
-                                                            <div class="member-view-box">
-                                                                <div class="member-image">
                                                                     <div class="member-details">
                                                                         <h3>FAS<br>Project Management</h3>
                                                                     </div>
@@ -1053,7 +1009,7 @@ window.AboutComponent = {
             </section>
 
             <!-- Bottom Images Gallery -->
-            <section style="background: rgba(255, 255, 255, 0.03); border-top: 1px solid var(--glass-border); padding: 4rem 0; width: 100%;">
+            <section style="border-top: 1px solid var(--glass-border); padding: 4rem 0; width: 100%;">
                 <div style="max-width: 1400px; margin: 0 auto; padding: 0 2rem;">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
                         <div class="img-wrapper" style="border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);">

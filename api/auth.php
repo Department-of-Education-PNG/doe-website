@@ -14,6 +14,10 @@ $action = $_GET['action'] ?? '';
 switch ($action) {
     case 'login':
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') jsonError('POST required', 405);
+        
+        // Rate limit: 5 attempts per 15 minutes per IP
+        checkRateLimit('login', 5, 15);
+
         $data = getPostData();
         validateRequired($data, ['username', 'password']);
 
@@ -34,6 +38,8 @@ switch ($action) {
         $_SESSION['admin_logged_in'] = true;
         $_SESSION['admin_id'] = $user['id'];
         $_SESSION['admin_username'] = $user['username'];
+        $_SESSION['admin_full_name'] = $user['full_name'] ?? $user['username'];
+        $_SESSION['admin_role'] = $user['role'] ?? 'editor';
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 
         jsonResponse([
@@ -49,9 +55,25 @@ switch ($action) {
         break;
 
     case 'check':
+        $loggedIn = isLoggedIn();
+        $role = $_SESSION['admin_role'] ?? null;
+        
+        // Auto-Repair: If logged in but role is missing (post-migration), fetch it.
+        if ($loggedIn && !$role && isset($_SESSION['admin_id'])) {
+            $pdo = Database::getInstance()->getConnection();
+            $stmt = $pdo->prepare("SELECT role FROM admin_users WHERE id = ?");
+            $stmt->execute([$_SESSION['admin_id']]);
+            $role = $stmt->fetchColumn();
+            if ($role) {
+                $_SESSION['admin_role'] = $role;
+            }
+        }
+
         jsonResponse([
-            'logged_in' => isLoggedIn(),
-            'username' => $_SESSION['admin_username'] ?? null
+            'logged_in' => $loggedIn,
+            'username' => $_SESSION['admin_username'] ?? null,
+            'full_name' => $_SESSION['admin_full_name'] ?? null,
+            'role' => $role
         ]);
         break;
 

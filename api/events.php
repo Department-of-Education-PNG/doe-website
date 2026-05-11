@@ -37,20 +37,41 @@ switch ($action) {
         $data = getPostData();
         validateRequired($data, ['title', 'event_date']);
         $stmt = $pdo->prepare("INSERT INTO events (title, description, event_date, event_time, location, image_path, status) VALUES (?,?,?,?,?,?,?)");
-        $stmt->execute([sanitize($data['title']), $data['description'] ?? null, $data['event_date'], $data['event_time'] ?? null, sanitize($data['location'] ?? ''), $data['image_path'] ?? null, $data['status'] ?? 'upcoming']);
-        jsonResponse(['success' => true, 'id' => $pdo->lastInsertId()], 201);
+        $stmt->execute([
+            sanitize($data['title']), 
+            sanitizeHtml($data['description'] ?? null), 
+            sanitize($data['event_date']), 
+            sanitize($data['event_time'] ?? null), 
+            sanitize($data['location'] ?? ''), 
+            sanitize($data['image_path'] ?? null), 
+            sanitize($data['status'] ?? 'upcoming')
+        ]);
+        $newId = $pdo->lastInsertId();
+        logActivity('CREATE', 'events', $newId, "Created event: " . $data['title']);
+        jsonResponse(['success' => true, 'id' => $newId], 201);
         break;
     case 'update':
         $data = getPostData();
         validateRequired($data, ['id', 'title', 'event_date']);
         $stmt = $pdo->prepare("UPDATE events SET title=?, description=?, event_date=?, event_time=?, location=?, image_path=?, status=? WHERE id=?");
-        $stmt->execute([sanitize($data['title']), $data['description'] ?? null, $data['event_date'], $data['event_time'] ?? null, sanitize($data['location'] ?? ''), $data['image_path'] ?? null, $data['status'] ?? 'upcoming', (int)$data['id']]);
+        $stmt->execute([
+            sanitize($data['title']), 
+            sanitizeHtml($data['description'] ?? null), 
+            sanitize($data['event_date']), 
+            sanitize($data['event_time'] ?? null), 
+            sanitize($data['location'] ?? ''), 
+            sanitize($data['image_path'] ?? null), 
+            sanitize($data['status'] ?? 'upcoming'), 
+            (int)$data['id']
+        ]);
+        logActivity('UPDATE', 'events', $data['id'], "Updated event: " . $data['title']);
         jsonResponse(['success' => true]);
         break;
     case 'delete':
         $data = getPostData();
         validateRequired($data, ['id']);
         $pdo->prepare("DELETE FROM events WHERE id = ?")->execute([(int)$data['id']]);
+        logActivity('DELETE', 'events', $data['id'], "Deleted event ID: " . $data['id']);
         jsonResponse(['success' => true]);
         break;
     default:

@@ -1,0 +1,35 @@
+# Security: Force HTTPS for admin (if available)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Security: Prevent framing to avoid Clickjacking
+Header always set X-Frame-Options "SAMEORIGIN"
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-XSS-Protection "1; mode=block"
+Header always set Content-Security-Policy "default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:;"
+
+# Security: Disable directory browsing
+Options -Indexes
+
+# Security: Prevent direct access to all .php files except for the ones we need
+<FilesMatch "\.(php|txt|log|map)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Allow access only to main entry points
+<Files "index.php">
+    Allow from all
+</Files>
+<Files "dashboard.php">
+    Allow from all
+</Files>
+<Files "logout.php">
+    Allow from all
+</Files>
+<Files "preview.html">
+    Allow from all
+</Files>

@@ -3,40 +3,45 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Department of Education | Papua New Guinea</title>
-    <meta name="description" content="National Department of Education Papua New Guinea — Providing quality education, curriculum resources, and administrative services for all PNG citizens.">
-    <meta name="keywords" content="Education PNG, Papua New Guinea Schools, DoE PNG, Curriculum Resources, Teacher Resources, PNG Education Portal">
+    <meta name="description"
+        content="National Department of Education Papua Guinea — Providing quality education, curriculum resources, and administrative services for all PNG citizens.">
+    <meta name="keywords"
+        content="Education PNG, Papua New Guinea Schools, DoE PNG, Curriculum Resources, Teacher Resources, PNG Education Portal">
     <link rel="canonical" href="https://education.gov.pg">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://education.gov.pg/">
     <meta property="og:title" content="Department of Education | Papua New Guinea">
-    <meta property="og:description" content="Providing quality education and resources for all citizens of Papua New Guinea.">
+    <meta property="og:description"
+        content="Providing quality education and resources for all citizens of Papua New Guinea.">
     <meta property="og:image" content="https://education.gov.pg/assets/images/logo/DoE-Logo.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://education.gov.pg/">
     <meta property="twitter:title" content="Department of Education | Papua New Guinea">
-    <meta property="twitter:description" content="Providing quality education and resources for all citizens of Papua New Guinea.">
+    <meta property="twitter:description"
+        content="Providing quality education and resources for all citizens of Papua New Guinea.">
     <meta property="twitter:image" content="https://education.gov.pg/assets/images/logo/DoE-Logo.png">
 
     <!-- Styles & Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="assets/images/logo/DoE-Logo.png?v=2">
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="icon" id="favicon" type="image/png" href="assets/images/logo/DoE-Logo.png?v=2">
+    <link rel="stylesheet" href="styles.css?v=2026.11">
 
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
 
     <!-- Preload Critical Assets -->
-    <link rel="preload" href="components/api.js" as="script">
-    <link rel="preload" href="router.js" as="script">
-    <link rel="preload" href="components/home.js" as="script">
+    <link rel="preload" href="components/api.js?v=2026.11" as="script">
+    <link rel="preload" href="router.js?v=2026.6" as="script">
+    <link rel="preload" href="components/home.js?v=2026.6" as="script">
 
     <meta name="theme-color" content="#0a0d14">
 </head>
@@ -48,11 +53,11 @@
     <header class="glass-header">
         <div class="header-container">
             <a href="#home" class="logo">
-                <img src="assets/images/logo/DoE-Logo.png" alt="Department Logo Placeholder"
-                    class="logo-img-placeholder">
+                <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                    alt="Department Logo" id="header-logo" class="logo-img-placeholder">
                 <div class="logo-text">
-                    <h1>Department of Education</h1>
-                    <span>Papua New Guinea</span>
+                    <h1 id="header-title">Department of Education</h1>
+                    <span id="header-subtitle">Papua New Guinea</span>
                 </div>
             </a>
 
@@ -60,15 +65,26 @@
                 <a href="#home" class="nav-link">Home</a>
 
                 <div class="dropdown">
-                    <a href="#about" class="nav-link">About Us <span class="arrow">▼</span></a>
+                    <a href="#about" class="nav-link">About Us <svg xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-chevron-down nav-icon-sm arrow">
+                            <path d="m6 9 6 6 6-6" />
+                        </svg></a>
                     <div class="dropdown-content glass-panel">
                         <a href="#about" class="dropdown-item">Mission & Vision</a>
                         <a href="#about" class="dropdown-item">Organizational Structure</a>
                         <a href="#about" class="dropdown-item">History</a>
+                        <a href="#faq" class="dropdown-item" style="color: var(--primary-light); font-weight: 600;">FAQ
+                            (Help Center)</a>
                         <hr class="dropdown-divider">
                         <div class="nested-dropdown" id="programs-nested">
                             <div class="dropdown-item nested-trigger" onclick="toggleNested(event)">
-                                Programs & Services <span class="arrow">▶</span>
+                                Programs & Services <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-chevron-right nav-icon-sm arrow">
+                                    <path d="m9 18 6-6-6-6" />
+                                </svg>
                             </div>
                             <div class="nested-content">
                                 <a href="#programs" class="dropdown-item sub-item">Overview</a>
@@ -82,7 +98,11 @@
 
                         <div class="nested-dropdown" id="publications-nested">
                             <div class="dropdown-item nested-trigger" onclick="toggleNested(event)">
-                                Publications <span class="arrow">▶</span>
+                                Publications <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-chevron-right nav-icon-sm arrow">
+                                    <path d="m9 18 6-6-6-6" />
+                                </svg>
                             </div>
                             <div class="nested-content">
                                 <a href="#publications" class="dropdown-item sub-item">Overview</a>
@@ -95,7 +115,11 @@
 
                         <div class="nested-dropdown" id="careers-nested">
                             <div class="dropdown-item nested-trigger" onclick="toggleNested(event)">
-                                Careers <span class="arrow">▶</span>
+                                Careers <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-chevron-right nav-icon-sm arrow">
+                                    <path d="m9 18 6-6-6-6" />
+                                </svg>
                             </div>
                             <div class="nested-content">
                                 <a href="#careers" class="dropdown-item sub-item">Job Opportunities</a>
@@ -110,7 +134,7 @@
                     <div class="dropdown-content glass-panel">
                         <a href="#press-release" class="dropdown-item">Press Releases</a>
                         <a href="#gallery" class="dropdown-item">Gallery</a>
-                        <a href="#news" class="dropdown-item">Calendar of events</a>
+                        <a href="#calendars" class="dropdown-item">Calendars & Term Dates</a>
                         <a href="#news" class="dropdown-item">Latest News</a>
                     </div>
                 </div>
@@ -125,26 +149,44 @@
                     </div>
                 </div>
 
-                <a href="#contact" class="nav-link btn-primary">Contact Us</a>
-                <button class="search-toggle" id="search-toggle-btn" aria-label="Search" title="Search">
-                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                </button>
             </nav>
 
-            <button class="mobile-toggle" aria-label="Toggle Menu">
-                <span></span><span></span><span></span>
-            </button>
+            <!-- Header Actions (Buttons + Hamburger) -->
+            <div class="header-actions">
+                <a href="#contact" class="nav-link btn-primary header-btn-contact">
+                    <span class="btn-text">Contact Us</span>
+                    <svg class="lucide lucide-phone nav-icon-sm mobile-only-icon" style="display:none; width: 18px; height: 18px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </a>
+
+                <button class="search-toggle" aria-label="Search" title="Search (Ctrl+K)">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                </button>
+
+                <button class="mobile-toggle" aria-label="Toggle Menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
         </div>
     </header>
 
     <!-- Search Overlay -->
     <div class="search-overlay" id="search-overlay">
+        <!-- Close button is a direct child of overlay, NOT inner — prevents transform breaking position:fixed -->
+        <button class="search-close-btn" id="search-close-btn" aria-label="Close Search">&times;</button>
         <div class="search-overlay-inner">
-            <button class="search-close-btn" id="search-close-btn" aria-label="Close Search">&times;</button>
             <h2 class="search-overlay-title">Search the Department of Education</h2>
             <div class="search-input-wrapper">
-                <svg class="search-input-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input type="text" id="site-search-input" class="search-input" placeholder="Type to search pages, news, publications..." autocomplete="off">
+                <svg class="search-input-icon" viewBox="0 0 24 24" width="22" height="22" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input type="text" id="site-search-input" class="search-input"
+                    placeholder="Type to search pages, news, publications..." autocomplete="off">
             </div>
             <div class="search-results" id="search-results">
                 <div class="search-placeholder-text">Start typing to find pages, news articles, forms, and more...</div>
@@ -179,10 +221,10 @@
         <div class="footer-container">
             <div class="footer-col">
                 <div class="footer-brand">
-                    <img src="assets/images/logo/DoE-Logo.png" alt="DoE Logo" class="footer-logo">
-                    <h3>Department of<br>Education</h3>
+                    <img src="" alt="Logo" id="footer-logo-img" class="footer-logo" style="display:none;" onload="this.style.display='block'">
+                    <h3 id="footer-brand-title">Department of<br>Education</h3>
                 </div>
-                <p>Providing quality education for all in Papua New Guinea to promote national growth and opportunities.</p>
+                <p id="footer-brand-desc">Ensuring quality education for all children in Papua New Guinea to promote national growth and opportunities.</p>
                 <div class="contact-info">
                     <div class="footer-contact-item">
                         <i data-lucide="map-pin"></i>
@@ -209,71 +251,67 @@
                 <a href="#careers">Careers & Scholarships</a>
                 <a href="#contact">Contact Us</a>
             </div>
-            
-            <div class="footer-col">
-                <h3>Divisions & Portals</h3>
-                <a href="#home">Teaching Service Commission</a>
-                <a href="#home">National Library & Archives</a>
-                <a href="#home">Measurement Services</a>
-                <a href="#home">e-Learning Portal</a>
-                <a href="#home">Teacher MyPay</a>
-                <a href="#home">School Inspection</a>
-            </div>
 
             <div class="footer-col">
+                <h3>Divisions & Portals</h3>
+                <a href="#about">Teaching Service Commission</a>
+                <a href="#about">National Library & Archives</a>
+                <a href="#publications">Measurement Services</a>
+                <a href="#app-gallery">e-Learning Portal</a>
+                <a href="#app-gallery">Teacher MyPay</a>
+                <a href="#about">School Inspection</a>
+            </div>
+
+            <div class="footer-section">
                 <h3>Legal & Connect</h3>
-                <a href="#home">Privacy Policy</a>
-                <a href="#home">Terms of Use</a>
-                <a href="#home">Accessibility Statement</a>
-                <a href="#home">Right to Information</a>
-                
-                <h3 class="footer-follow-heading">Follow Us</h3>
-                <div class="footer-social-links">
-                    <a href="#" class="footer-social-icon icon-whatsapp" title="WhatsApp" aria-label="WhatsApp">
-                        <svg viewBox="0 0 448 512" width="24" height="24"><path fill="currentColor" d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-117zm-157 338.7c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-5.5-2.8-23.2-8.5-44.2-27.1-16.4-14.6-27.4-32.6-30.6-37.9-3.2-5.5-.3-8.5 2.5-11.3 2.5-2.5 5.5-6.4 8.3-9.6 2.8-3.2 3.7-5.5 5.6-9.2 1.9-3.7 1-6.9-.5-9.6-1.5-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 13.2 5.8 23.5 9.2 31.5 11.8 13.3 4.2 25.4 3.6 35 2.2 10.7-1.5 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
-                    </a>
-                    <a href="#" class="footer-social-icon icon-linkedin" title="LinkedIn" aria-label="LinkedIn">
-                        <svg viewBox="0 0 448 512" width="24" height="24"><path fill="currentColor" d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/></svg>
-                    </a>
-                    <a href="#" class="footer-social-icon icon-facebook" title="Facebook" aria-label="Facebook">
-                        <svg viewBox="0 0 320 512" width="24" height="24"><path fill="currentColor" d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
-                    </a>
-                </div>
+                <a href="#privacy">Privacy Policy</a>
+                <a href="#terms">Terms of Use</a>
+                <a href="#accessibility">Accessibility Statement</a>
+                <a href="#rti">Right to Information</a>
+                <a href="#faq">Help & FAQ</a>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 Department of Education, Papua New Guinea. All rights reserved. Providing inclusive and accessible education for a brighter future.</p>
+            <p id="footer-copyright">&copy; 2026 Department of Education, Papua New Guinea. All rights reserved.</p>
         </div>
     </footer>
 
     <!-- Utilities and App Logic -->
-    <script src="components/api.js" defer></script>
-    <script src="components/home.js" defer></script>
-    <script src="components/about.js" defer></script>
-    <script src="components/programs.js" defer></script>
-    <script src="components/publications.js" defer></script>
-    <script src="components/news.js" defer></script>
-    <script src="components/careers.js" defer></script>
-    <script src="components/contact.js" defer></script>
-    <script src="components/forms.js" defer></script>
-    <script src="components/form_detail.js" defer></script>
-    <script src="components/form-teacher-query.js" defer></script>
-    <script src="components/app_gallery.js" defer></script>
-    <script src="components/search.js" defer></script>
-    <script src="components/elementary.js" defer></script>
-    <script src="components/primary.js" defer></script>
-    <script src="components/secondary.js" defer></script>
-    <script src="components/textbooks.js" defer></script>
-    <script src="components/gallery.js" defer></script>
-    <script src="components/press-release.js" defer></script>
-    <script src="router.js" defer></script>
+    <script src="components/api.js?v=2026.11"></script>
+    <script src="components/home.js?v=2026.11" defer></script>
+    <script src="components/about.js?v=2026.11" defer></script>
+    <script src="components/programs.js?v=2026.11" defer></script>
+    <script src="components/publications.js?v=2026.11" defer></script>
+    <script src="components/news.js?v=2026.11" defer></script>
+    <script src="components/careers.js?v=2026.11" defer></script>
+    <script src="components/contact.js?v=2026.11" defer></script>
+    <script src="components/forms.js?v=2026.11" defer></script>
+    <script src="components/form_detail.js?v=2026.11" defer></script>
+    <script src="components/form-teacher-query.js?v=2026.11" defer></script>
+    <script src="components/app_gallery.js?v=2026.11" defer></script>
+    <script src="components/news_detail.js?v=2026.11" defer></script>
+    <script src="components/search.js?v=2026.11" defer></script>
+    <script src="components/elementary.js?v=2026.11" defer></script>
+    <script src="components/primary.js?v=2026.11" defer></script>
+    <script src="components/secondary.js?v=2026.11" defer></script>
+    <script src="components/textbooks.js?v=2026.11" defer></script>
+    <script alt="legal policy component" src="components/legal.js?v=2026.11" defer></script>
+    <script src="components/gallery.js?v=2026.11" defer></script>
+    <script src="components/press-release.js?v=2026.11" defer></script>
+    <script src="components/scholarships.js?v=2026.11" defer></script>
+    <script src="components/leaders.js?v=2026.11" defer></script>
+    <script src="components/faq.js?v=2026.11" defer></script>
+    <script src="components/notices.js?v=2026.11" defer></script>
+    <script src="router.js?v=2026.11" defer></script>
     
     <script>
         // Init Lucide
-        lucide.createIcons();
+        if (window.lucide) lucide.createIcons();
 
         // Hamburger Menu & Mobile Accordion Logic
         document.addEventListener('DOMContentLoaded', () => {
+            // Init Lucide safely
+            if (window.lucide) window.lucide.createIcons();
             const toggle = document.querySelector('.mobile-toggle');
             const nav = document.querySelector('.main-nav');
             
@@ -371,11 +409,103 @@
                     document.querySelectorAll('.nested-dropdown').forEach(nd => nd.classList.remove('active'));
                     nav.classList.remove('active');
                     toggle.classList.remove('active');
-                    document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+                    document.querySelectorAll('.modal, .modal-overlay').forEach(m => m.classList.remove('active'));
                     document.body.style.overflow = 'auto';
                 }
             });
+            // ─── Table Scroll State Manager ──────────────────────────
+            // Watches for tables injected by the SPA router and applies
+            // at-start / at-end classes for the CSS fade-edge mask.
+            function initTableScrollers(root) {
+                root = root || document;
+                root.querySelectorAll('.table-inner').forEach(function(inner) {
+                    if (inner.dataset.scrollInit) return; // already wired
+                    inner.dataset.scrollInit = '1';
+
+                    function update() {
+                        const atStart = inner.scrollLeft <= 4;
+                        const atEnd   = inner.scrollLeft + inner.clientWidth >= inner.scrollWidth - 4;
+                        inner.classList.toggle('at-start', atStart);
+                        inner.classList.toggle('at-end',   atEnd);
+
+                        // Show/hide the hint pill
+                        const hint = inner.parentElement.querySelector('.table-scroll-hint');
+                        if (hint) hint.style.display = (inner.scrollWidth > inner.clientWidth) ? 'flex' : 'none';
+                    }
+
+                    // Inject mobile scroll hint if not already there
+                    const wrap = inner.closest('.table-scroll-wrap');
+                    if (wrap && !wrap.querySelector('.table-scroll-hint')) {
+                        const hint = document.createElement('div');
+                        hint.className = 'table-scroll-hint';
+                        hint.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Scroll <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>';
+                        wrap.appendChild(hint);
+                    }
+
+                    inner.addEventListener('scroll', update, { passive: true });
+                    window.addEventListener('resize', update, { passive: true });
+                    update(); // run immediately
+                });
+            }
+
+            // Run on first load
+            initTableScrollers();
+
+            // Re-run whenever the SPA injects new content
+            const _appContent = document.getElementById('app-content');
+            if (_appContent) {
+                new MutationObserver(function() {
+                    initTableScrollers(_appContent);
+                }).observe(_appContent, { childList: true, subtree: true });
+            }
+
+            // ─── Back to Top Logic ──────────────────────────
+            const backToTopBtn = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 600) {
+                    backToTopBtn.classList.add('active');
+                } else {
+                    backToTopBtn.classList.remove('active');
+                }
+            }, { passive: true });
+
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // ─── Global Branding Injection ──────────────────
+            async function applyGlobalBranding() {
+                const settings = await window.DoEAPI.loadSettings();
+                if (!settings) return;
+
+                const headerLogoUrl = window.DoEAPI.imgUrl(settings.site_logo);
+                const footerLogoUrl = window.DoEAPI.imgUrl(settings.footer_logo || settings.site_logo);
+                const faviconUrl = window.DoEAPI.imgUrl(settings.site_favicon);
+                
+                // Update Logos
+                const hLogo = document.getElementById('header-logo');
+                const fLogo = document.getElementById('footer-logo-img');
+                const fav = document.getElementById('favicon');
+
+                if (hLogo && headerLogoUrl) hLogo.src = headerLogoUrl;
+                if (fLogo && footerLogoUrl) fLogo.src = footerLogoUrl;
+                if (fav) fav.href = faviconUrl || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
+                // Update Footer Branding (Titles & Text)
+                if (settings.site_description) document.getElementById('footer-brand-desc').innerText = settings.site_description;
+                if (settings.site_copyright) document.getElementById('footer-copyright').innerHTML = settings.site_copyright;
+                
+                // Update Footer Brand Name (handles the <br> line break if present)
+                if (settings.site_title) {
+                    const brandTitle = document.getElementById('footer-brand-title');
+                    if (brandTitle) brandTitle.innerHTML = settings.site_title.replace('Department of ', 'Department of<br>');
+                }
+            }
+
+            applyGlobalBranding();
         });
     </script>
+    <!-- DoE AI Chatbot (EduBot) -->
+    <script src="components/chatbot.js?v=2026.1" defer></script>
 </body>
 </html>

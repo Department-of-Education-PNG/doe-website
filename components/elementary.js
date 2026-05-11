@@ -1,17 +1,15 @@
 window.ElementaryComponent = {
     render: async () => {
         return `
-            <div class="subpage-header" style="background: linear-gradient(135deg, rgba(14, 32, 64, 0.95) 0%, rgba(14, 32, 64, 0.8) 100%), url('assets/images/elementory-banner/elem-imgs.png') center/cover; padding: 10rem 2rem 6rem; text-align: center; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, var(--primary-glow) 0%, transparent 70%); opacity: 0.3; pointer-events: none;"></div>
-                <div class="container" style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;">
-                    <h1 style="font-size: clamp(2.5rem, 8vw, 4rem); font-weight: 800; margin-bottom: 1.5rem; letter-spacing: -1.5px; line-height: 1.1;">Elementary Education</h1>
-                    <div style="width: 80px; height: 4px; background: var(--accent); margin: 0 auto 2rem; border-radius: 2px;"></div>
-                    <p style="font-size: 1.25rem; color: var(--text-muted); max-width: 800px; margin: 0 auto; line-height: 1.6;">The foundation of lifelong learning, cultural identity, and character building in Papua New Guinea.</p>
+            <div class="subpage-header reveal-up">
+                <div class="subpage-header-inner">
+                    <h1 class="reveal-up">Elementary Education</h1>
+                    <p class="reveal-up">The foundation of lifelong learning, cultural identity, and character building in Papua New Guinea.</p>
                 </div>
             </div>
 
-            <section class="section-full">
-                <div class="grid-2" style="align-items: center; gap: 5rem;">
+            <section class="section-full" style="padding: var(--section-spacing) 0;">
+                <div class="grid-2" style="align-items: center; gap: var(--grid-gap);">
                     <div class="content-text">
                         <h2 style="font-size: 2rem; color: var(--primary); margin-bottom: 1.5rem;">The First Stage of Formal Education</h2>
                         <p style="font-size: 1.15rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 1.5rem;">
@@ -23,7 +21,7 @@ window.ElementaryComponent = {
                         <p style="font-size: 1.15rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 2rem;">
                             Conducted in the language of the child's community, these years prepare students for entry into <span style="color: var(--accent);">Primary School at Grade 3</span>. This community-based approach ensures that the transition to formal schooling is natural, supportive, and grounded in local heritage.
                         </p>
-                        <div class="glass-panel" style="padding: 2.5rem; border-left: 4px solid var(--accent); position: relative; background: rgba(255, 255, 255, 0.03);">
+                        <div class="glass-panel" style="padding: var(--card-padding); border-left: 4px solid var(--accent); position: relative; background: rgba(255, 255, 255, 0.03);">
                             <svg style="position: absolute; top: 1.5rem; right: 1.5rem; width: 40px; height: 40px; opacity: 0.1; fill: var(--accent);" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 13.1216 16 12.017 16H9.01704C7.91247 16 7.01704 16.8954 7.01704 18V21H14.017ZM14.017 21H17.017V18C17.017 15.2386 14.7784 13 12.017 13H9.01704C6.25562 13 4.01704 15.2386 4.01704 18V21H14.017ZM12.017 11C13.6739 11 15.017 9.65685 15.017 8C15.017 6.34315 13.6739 5 12.017 5C10.3602 5 9.01704 6.34315 9.01704 8C9.01704 9.65685 10.3602 11 12.017 11ZM12.017 3C14.7784 3 17.017 5.23858 17.017 8C17.017 10.7614 14.7784 13 12.017 13C9.25562 13 7.01704 10.7614 7.01704 8C7.01704 5.23858 9.25562 3 12.017 3Z"/></svg>
                             <h4 style="color: var(--text-main); margin-bottom: 1rem; font-size: 1.2rem;">Building Life Skills</h4>
                             <p style="color: var(--text-muted); font-size: 1rem; margin: 0; line-height: 1.6;">
@@ -41,7 +39,7 @@ window.ElementaryComponent = {
                 </div>
             </section>
 
-            <section class="section-full" style="padding-top: 0;">
+            <section class="section-full" style="padding: var(--section-spacing) 0 0;">
                 <div class="grid-3">
                     <div class="card glass-panel" style="text-align: center; border-bottom: 4px solid var(--primary);">
                         <div style="font-size: 2.5rem; margin-bottom: 1rem;">🇵🇳</div>
@@ -63,16 +61,18 @@ window.ElementaryComponent = {
 
             <div style="background: linear-gradient(to right, transparent, rgba(59, 165, 224, 0.1), transparent); height: 1px; width: 100%; max-width: 1400px; margin: 0 auto;"></div>
 
-            <section class="section-full">
+            <section class="section-full" style="padding: var(--section-spacing) 0;">
                 <div style="max-width: 1000px; margin: 0 auto;">
-                    <h2 class="section-title" style="margin-bottom: 1.5rem;">Syllabus & Teacher's Guides</h2>
-                    <p style="text-align: center; color: var(--text-muted); margin-bottom: 4rem; max-width: 700px; margin-left: auto; margin-right: auto;">
-                        Click on the subjects below to access official curriculum documents and instructional guides for each elementary grade.
-                    </p>
+                    <div class="section-header" style="align-items: center; text-align: center;">
+                        <h2 style="text-align: center;">Syllabus & Teacher's Guides</h2>
+                        <p class="section-p" style="color: var(--text-muted); margin: 0 auto; text-align: center; max-width: 700px;">
+                            Click on the subjects below to access official curriculum documents and instructional guides for each elementary grade.
+                        </p>
+                    </div>
 
-                    <div class="glass-panel" style="overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
-                        <div style="overflow-x: auto;">
-                            <table class="glass-table" style="margin-top: 0; min-width: 700px;">
+                    <div class="table-scroll-wrap glass-panel" style="box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+                        <div class="table-inner">
+                            <table class="glass-table" style="min-width: 700px;">
                                 <thead>
                                     <tr style="background: rgba(59, 165, 224, 0.15);">
                                         <th style="padding: 1.5rem; color: var(--primary); font-weight: 800;">Grade / Stage</th>
@@ -181,7 +181,7 @@ window.ElementaryComponent = {
                 </div>
             </section>
 
-            <section class="section-full" style="background: rgba(59, 165, 224, 0.05); text-align: center; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);">
+            <section class="section-full" style="text-align: center; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); padding: var(--section-spacing) 0;">
                 <div class="container" style="max-width: 800px; margin: 0 auto;">
                     <h2 style="font-size: 2rem; color: #fff; margin-bottom: 1.5rem;">Government Goal</h2>
                     <p style="font-size: 1.2rem; line-height: 1.8; color: var(--text-muted);">

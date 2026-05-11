@@ -1,17 +1,15 @@
 window.SecondaryComponent = {
     render: async () => {
         return `
-            <div class="subpage-header" style="background: linear-gradient(135deg, rgba(14, 32, 64, 0.9) 0%, rgba(20, 50, 95, 0.7) 100%), url('assets/images/secondary-banner/g12-img.png') center/cover; padding: 10rem 2rem 6rem; text-align: center; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, var(--primary-glow) 0%, transparent 70%); opacity: 0.3; pointer-events: none;"></div>
-                <div class="container" style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;">
-                    <h1 style="font-size: clamp(2.5rem, 8vw, 4rem); font-weight: 800; margin-bottom: 1.5rem; letter-spacing: -1.5px; line-height: 1.1;">Secondary Education</h1>
-                    <div style="width: 80px; height: 4px; background: var(--accent); margin: 0 auto 2rem; border-radius: 2px;"></div>
-                    <p style="font-size: 1.25rem; color: var(--text-muted); max-width: 800px; margin: 0 auto; line-height: 1.6;">Advanced progression towards higher learning and professional excellence in Papua New Guinea.</p>
+            <div class="subpage-header reveal-up">
+                <div class="subpage-header-inner">
+                    <h1 class="reveal-up">Secondary Education</h1>
+                    <p class="reveal-up">Empowering students to reach their full potential and prepare for higher learning or the workforce.</p>
                 </div>
             </div>
 
-            <section class="section-full">
-                <div class="grid-2" style="align-items: center; gap: 5rem;">
+            <section class="section-full" style="padding: var(--section-spacing) 0;">
+                <div class="grid-2" style="align-items: center; gap: var(--grid-gap);">
                     <div class="content-text">
                         <h2 style="font-size: 2rem; color: var(--primary); margin-bottom: 1.5rem;">Pathways to Excellence (Grades 9 - 12)</h2>
                         <p style="font-size: 1.15rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 1.5rem;">
@@ -35,7 +33,7 @@ window.SecondaryComponent = {
                 </div>
             </section>
 
-            <section class="section-full" style="background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);">
+            <section class="section-full" style="border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); padding: var(--section-spacing) 0;">
                 <div class="grid-2">
                     <div class="card glass-panel" style="border-left: 4px solid var(--primary);">
                         <h3 style="color: #fff; display: flex; align-items: center; gap: 0.5rem;"><span style="font-size: 1.5rem;">📜</span> School Certificate</h3>
@@ -50,15 +48,17 @@ window.SecondaryComponent = {
                 </div>
             </section>
 
-            <section class="section-full">
-                <h2 class="section-title">Standard Based Curriculum (SBC)</h2>
-                <p style="text-align: center; color: var(--text-muted); margin-bottom: 4rem; max-width: 800px; margin-left: auto; margin-right: auto; font-size: 1.1rem;">
-                    The Department of Education continuously updates the secondary curriculum to ensure high academic standards and industry relevance.
-                </p>
+            <section class="section-full" style="padding: var(--section-spacing) 0;">
+                <div class="section-header">
+                    <h2>Standard Based Curriculum (SBC)</h2>
+                    <p class="section-p" style="color: var(--text-muted); margin: 0; font-size: 1.1rem;">
+                        The Department of Education continuously updates the secondary curriculum to ensure high academic standards and industry relevance.
+                    </p>
+                </div>
 
-                <div class="glass-panel" style="overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
-                    <div style="overflow-x: auto;">
-                        <table class="glass-table" style="margin-top: 0; min-width: 1000px;">
+                <div class="table-scroll-wrap glass-panel" style="box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+                    <div class="table-inner">
+                        <table class="glass-table" style="min-width: 1000px;">
                             <thead>
                                 <tr style="background: rgba(59, 165, 224, 0.15);">
                                     <th style="padding: 1.5rem; color: var(--primary); font-weight: 800;">Subject Area</th>
@@ -217,13 +217,13 @@ window.SecondaryComponent = {
                 </div>
             </section>
 
-            <section class="section-full" style="background: rgba(231, 76, 60, 0.03); border-top: 1px solid rgba(231, 76, 60, 0.1);">
-                <div class="glass-panel" style="padding: 3rem; border-color: rgba(231, 76, 60, 0.2);">
+            <section class="section-full" style="border-top: 1px solid rgba(231, 76, 60, 0.1); padding: var(--section-spacing) 0;">
+                <div class="table-scroll-wrap glass-panel" style="padding: var(--card-padding); border-color: rgba(231, 76, 60, 0.2);">
                     <h3 style="color: var(--accent-red); margin-bottom: 2rem;">Secretary's Advice: Ongoing OBC Syllabuses</h3>
                     <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.8; margin-bottom: 1.5rem;">
                         Per Secretary’s advice, the following <span style="color: #fff; font-weight: 600;">Outcome Based Curriculum (OBC)</span> syllabuses and teacher guides are to remain in effect until the Curriculum Development Division (CDD) completes the transition to stand-alone subjects under the new structure.
                     </p>
-                    <div style="overflow-x: auto;">
+                    <div class="table-inner">
                         <table class="glass-table" style="margin-top: 0; min-width: 600px;">
                             <thead>
                                 <tr style="background: rgba(231, 76, 60, 0.1);">

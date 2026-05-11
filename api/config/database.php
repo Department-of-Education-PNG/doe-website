@@ -6,10 +6,11 @@
  * Update these credentials with your cPanel MySQL details.
  */
 
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'doe_website');        // Your cPanel database name (may include prefix, e.g., cpaneluser_doe_website)
-define('DB_USER', 'doe_admin');          // Your cPanel database user
-define('DB_PASS', 'CHANGE_THIS');        // Your cPanel database password
+// ─── CPANEL DATABASE SETTINGS ──────────────────────────
+define('DB_HOST', 'localhost');      // Usually 'localhost' on cPanel
+define('DB_NAME', 'doe_website');    // Change to your cPanel DB name
+define('DB_USER', 'root');           // Change to your cPanel DB user
+define('DB_PASS', '');               // Change to your cPanel DB password
 define('DB_CHARSET', 'utf8mb4');
 
 class Database {

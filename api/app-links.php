@@ -11,7 +11,7 @@ $pdo = Database::getInstance()->getConnection();
 $action = $_GET['action'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && empty($action)) {
-    $stmt = $pdo->query("SELECT * FROM app_links WHERE is_active = 1 ORDER BY sort_order ASC");
+    $stmt = $pdo->query("SELECT * FROM app_links WHERE is_active = 1 ORDER BY category ASC, sort_order ASC");
     jsonResponse(['data' => $stmt->fetchAll()]);
 }
 
@@ -19,7 +19,7 @@ requireAuth();
 
 switch ($action) {
     case 'list':
-        jsonResponse(['data' => $pdo->query("SELECT * FROM app_links ORDER BY sort_order ASC")->fetchAll()]);
+        jsonResponse(['data' => $pdo->query("SELECT * FROM app_links ORDER BY category ASC, sort_order ASC")->fetchAll()]);
         break;
     case 'get':
         $stmt = $pdo->prepare("SELECT * FROM app_links WHERE id = ?");
@@ -29,21 +29,46 @@ switch ($action) {
     case 'create':
         $data = getPostData();
         validateRequired($data, ['title', 'url']);
-        $stmt = $pdo->prepare("INSERT INTO app_links (title, description, url, icon_emoji, icon_color, sort_order, is_active) VALUES (?,?,?,?,?,?,?)");
-        $stmt->execute([sanitize($data['title']), sanitize($data['description'] ?? ''), $data['url'], $data['icon_emoji'] ?? '🔗', $data['icon_color'] ?? '#0078d4', (int)($data['sort_order'] ?? 0), (int)($data['is_active'] ?? 1)]);
-        jsonResponse(['success' => true, 'id' => $pdo->lastInsertId()], 201);
+        $stmt = $pdo->prepare("INSERT INTO app_links (title, category, description, url, icon_emoji, icon_color, image_path, sort_order, is_active) VALUES (?,?,?,?,?,?,?,?,?)");
+        $stmt->execute([
+            sanitize($data['title']),
+            sanitize($data['category'] ?? 'NDoE Apps'),
+            sanitizeHtml($data['description'] ?? ''), 
+            sanitize($data['url']), 
+            sanitize($data['icon_emoji'] ?? '🔗'), 
+            sanitize($data['icon_color'] ?? '#0078d4'), 
+            sanitize($data['image_path'] ?? null), 
+            (int)($data['sort_order'] ?? 0), 
+            (int)($data['is_active'] ?? 1)
+        ]);
+        $newId = $pdo->lastInsertId();
+        logActivity('CREATE', 'app_links', $newId, "Created app link: " . $data['title']);
+        jsonResponse(['success' => true, 'id' => $newId], 201);
         break;
     case 'update':
         $data = getPostData();
         validateRequired($data, ['id', 'title', 'url']);
-        $stmt = $pdo->prepare("UPDATE app_links SET title=?, description=?, url=?, icon_emoji=?, icon_color=?, sort_order=?, is_active=? WHERE id=?");
-        $stmt->execute([sanitize($data['title']), sanitize($data['description'] ?? ''), $data['url'], $data['icon_emoji'] ?? '🔗', $data['icon_color'] ?? '#0078d4', (int)($data['sort_order'] ?? 0), (int)($data['is_active'] ?? 1), (int)$data['id']]);
+        $stmt = $pdo->prepare("UPDATE app_links SET title=?, category=?, description=?, url=?, icon_emoji=?, icon_color=?, image_path=?, sort_order=?, is_active=? WHERE id=?");
+        $stmt->execute([
+            sanitize($data['title']),
+            sanitize($data['category'] ?? 'NDoE Apps'),
+            sanitizeHtml($data['description'] ?? ''), 
+            sanitize($data['url']), 
+            sanitize($data['icon_emoji'] ?? '🔗'), 
+            sanitize($data['icon_color'] ?? '#0078d4'), 
+            sanitize($data['image_path'] ?? null), 
+            (int)($data['sort_order'] ?? 0), 
+            (int)($data['is_active'] ?? 1), 
+            (int)$data['id']
+        ]);
+        logActivity('UPDATE', 'app_links', $data['id'], "Updated app link: " . $data['title']);
         jsonResponse(['success' => true]);
         break;
     case 'delete':
         $data = getPostData();
         validateRequired($data, ['id']);
         $pdo->prepare("DELETE FROM app_links WHERE id = ?")->execute([(int)$data['id']]);
+        logActivity('DELETE', 'app_links', $data['id'], "Deleted app link ID: " . $data['id']);
         jsonResponse(['success' => true]);
         break;
     default:

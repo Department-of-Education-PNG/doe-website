@@ -13,6 +13,9 @@ $action = $_GET['action'] ?? '';
 
 // Public: Submit contact form
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($action)) {
+    // Rate limit: 3 submissions per hour per IP
+    checkRateLimit('contact', 10, 60);
+
     $data = getPostData();
     validateRequired($data, ['name', 'email', 'subject', 'message']);
 
@@ -20,12 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($action)) {
     if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
         jsonError('Invalid email address');
     }
-
-    // Rate limiting — max 5 submissions per hour per IP
-    $ip = $_SERVER['REMOTE_ADDR'];
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM contact_submissions WHERE submitted_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)");
-    $stmt->execute();
-    // Simple rate limit (in production, you'd track IP separately)
 
     // Save to database
     $stmt = $pdo->prepare("INSERT INTO contact_submissions (name, email, phone, subject, message) VALUES (?,?,?,?,?)");
@@ -41,42 +38,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($action)) {
     // Send email notification
     $emailSent = false;
     try {
+        require_once __DIR__ . '/config/mailer.php';
+        
         $to = NOTIFY_EMAIL;
-        $emailSubject = "New Contact Form: " . sanitize($data['subject']);
+        $emailSubject = "Contact Form: " . sanitize($data['subject']);
         
         $htmlBody = "
-        <html>
-        <body style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
-            <div style='background: #0e2040; color: #fff; padding: 20px; border-radius: 8px 8px 0 0; text-align: center;'>
-                <h2 style='margin: 0;'>📬 New Contact Form Submission</h2>
-                <p style='margin: 5px 0 0; opacity: 0.8;'>Department of Education PNG</p>
+        <div style='font-family: Arial, sans-serif; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; max-width: 600px; background: #ffffff;'>
+            <div style='background: #0e2040; color: #ffffff; padding: 25px; text-align: center;'>
+                <h2 style='margin: 0; font-size: 22px; font-weight: bold;'>Inquiry Received</h2>
+                <p style='margin: 5px 0 0; opacity: 0.8; font-size: 14px;'>Website Communication Portal</p>
             </div>
-            <div style='background: #f9f9f9; padding: 25px; border: 1px solid #ddd; border-top: none; border-radius: 0 0 8px 8px;'>
-                <table style='width: 100%; border-collapse: collapse;'>
-                    <tr><td style='padding: 10px 0; font-weight: bold; color: #333; width: 120px;'>Name:</td><td style='padding: 10px 0; color: #555;'>" . htmlspecialchars($data['name']) . "</td></tr>
-                    <tr><td style='padding: 10px 0; font-weight: bold; color: #333;'>Email:</td><td style='padding: 10px 0;'><a href='mailto:" . htmlspecialchars($data['email']) . "' style='color: #0070f3;'>" . htmlspecialchars($data['email']) . "</a></td></tr>
-                    <tr><td style='padding: 10px 0; font-weight: bold; color: #333;'>Phone:</td><td style='padding: 10px 0; color: #555;'>" . htmlspecialchars($data['phone'] ?? 'Not provided') . "</td></tr>
-                    <tr><td style='padding: 10px 0; font-weight: bold; color: #333;'>Subject:</td><td style='padding: 10px 0; color: #555;'>" . htmlspecialchars($data['subject']) . "</td></tr>
-                </table>
-                <hr style='border: none; border-top: 1px solid #ddd; margin: 15px 0;'>
-                <p style='font-weight: bold; color: #333; margin-bottom: 5px;'>Message:</p>
-                <div style='background: #fff; padding: 15px; border-radius: 6px; border: 1px solid #eee; color: #555; line-height: 1.6;'>" . nl2br(htmlspecialchars($data['message'])) . "</div>
-                <hr style='border: none; border-top: 1px solid #ddd; margin: 20px 0;'>
-                <p style='font-size: 12px; color: #999; text-align: center;'>
-                    This message was submitted via the contact form on education.gov.pg<br>
-                    Submission ID: #$submissionId | View all submissions in the <a href='https://education.gov.pg/admin/' style='color: #0070f3;'>Admin Panel</a>
-                </p>
+            <div style='padding: 25px; color: #333;'>
+                <p style='margin: 0 0 10px;'><strong>Name:</strong> " . htmlspecialchars($data['name']) . "</p>
+                <p style='margin: 0 0 10px;'><strong>Email:</strong> " . htmlspecialchars($data['email']) . "</p>
+                <p style='margin: 0 0 10px;'><strong>Phone:</strong> " . htmlspecialchars($data['phone'] ?? 'N/A') . "</p>
+                <p style='margin: 0 0 20px;'><strong>Subject:</strong> " . htmlspecialchars($data['subject']) . "</p>
+                
+                <div style='padding: 15px; background: #f8f9fa; border-left: 4px solid #0e2040; border-radius: 4px;'>
+                    <strong style='color: #0e2040;'>Message:</strong><br>
+                    <div style='margin-top: 8px; line-height: 1.6;'>" . nl2br(htmlspecialchars($data['message'])) . "</div>
+                </div>
+                
+                <div style='margin-top: 30px; padding-top: 15px; border-top: 1px solid #eee; font-size: 11px; color: #888; text-align: center;'>
+                    <p style='margin-bottom: 5px;'>Submission ID: #$submissionId | Submission Date: " . date("d M Y, H:i") . "</p>
+                    <p style='margin: 0;'>&copy; 2026 Department of Education, Papua New Guinea. All rights reserved.</p>
+                </div>
             </div>
-        </body>
-        </html>";
+        </div>";
 
-        // Use PHP mail() function — simple and works on cPanel
-        $headers = "MIME-Version: 1.0\r\n";
-        $headers .= "Content-type: text/html; charset=UTF-8\r\n";
-        $headers .= "From: " . MAIL_FROM_NAME . " <" . MAIL_FROM_ADDRESS . ">\r\n";
-        $headers .= "Reply-To: " . htmlspecialchars($data['email']) . "\r\n";
-
-        $emailSent = mail($to, $emailSubject, $htmlBody, $headers);
+        // Use new Direct SMTP Mailer
+        $emailSent = Mailer::send($to, $emailSubject, $htmlBody);
         
         // Update email_sent status
         $pdo->prepare("UPDATE contact_submissions SET email_sent = ? WHERE id = ?")->execute([$emailSent ? 1 : 0, $submissionId]);
@@ -103,11 +95,11 @@ requireAuth();
 
 switch ($action) {
     case 'list':
+        // SECURITY: strict allowlist — never concatenate raw $_GET into query
         $filter = $_GET['filter'] ?? 'all';
-        $where = '';
-        if ($filter === 'unread') $where = 'WHERE is_read = 0';
-        if ($filter === 'read') $where = 'WHERE is_read = 1';
-        $stmt = $pdo->query("SELECT * FROM contact_submissions $where ORDER BY submitted_at DESC");
+        $allowedFilters = ['all' => '', 'unread' => 'WHERE is_read = 0', 'read' => 'WHERE is_read = 1'];
+        $where = $allowedFilters[$filter] ?? ''; // Default to 'all' if invalid value
+        $stmt = $pdo->query("SELECT * FROM contact_submissions {$where} ORDER BY submitted_at DESC");
         
         // Count unread
         $unreadCount = $pdo->query("SELECT COUNT(*) FROM contact_submissions WHERE is_read = 0")->fetchColumn();

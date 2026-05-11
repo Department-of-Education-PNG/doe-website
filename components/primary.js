@@ -1,17 +1,15 @@
 window.PrimaryComponent = {
     render: async () => {
         return `
-            <div class="subpage-header" style="background: linear-gradient(135deg, rgba(20, 50, 95, 0.95) 0%, rgba(14, 32, 64, 0.8) 100%), url('assets/images/primary-banner/prim-banner.png') center/cover; padding: 10rem 2rem 6rem; text-align: center; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, var(--primary-glow) 0%, transparent 70%); opacity: 0.3; pointer-events: none;"></div>
-                <div class="container" style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;">
-                    <h1 style="font-size: clamp(2.5rem, 8vw, 4rem); font-weight: 800; margin-bottom: 1.5rem; letter-spacing: -1.5px; line-height: 1.1;">Primary Education</h1>
-                    <div style="width: 80px; height: 4px; background: var(--accent); margin: 0 auto 2rem; border-radius: 2px;"></div>
-                    <p style="font-size: 1.25rem; color: var(--text-muted); max-width: 800px; margin: 0 auto; line-height: 1.6;">Bridging early learning to advanced secondary education for the next generation of Papua New Guineans.</p>
+            <div class="subpage-header reveal-up">
+                <div class="subpage-header-inner">
+                    <h1 class="reveal-up">Primary Education</h1>
+                    <p class="reveal-up">Bridging early learning to advanced secondary education for the next generation of Papua New Guineans.</p>
                 </div>
             </div>
 
-            <section class="section-full">
-                <div class="grid-2" style="align-items: center; gap: 5rem;">
+            <section class="section-full" style="padding: var(--section-spacing) 0;">
+                <div class="grid-2" style="align-items: center; gap: var(--grid-gap);">
                     <div class="content-text">
                         <h2 style="font-size: 2rem; color: var(--primary); margin-bottom: 1.5rem;">Six Years of Growth (Grades 3 - 8)</h2>
                         <p style="font-size: 1.15rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 1.5rem;">
@@ -38,7 +36,7 @@ window.PrimaryComponent = {
                 </div>
             </section>
 
-            <section class="section-full" style="background: rgba(255, 255, 255, 0.02); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);">
+            <section class="section-full" style="border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); padding: var(--section-spacing) 0;">
                 <div style="max-width: 900px; margin: 0 auto; text-align: center;">
                     <h2 class="section-title" style="margin-bottom: 1.5rem;">Standard Based Curriculum (SBC)</h2>
                     <p style="font-size: 1.15rem; line-height: 1.8; color: var(--text-muted);">
@@ -47,14 +45,16 @@ window.PrimaryComponent = {
                 </div>
             </section>
 
-            <section class="section-full">
-                <h2 class="section-title">Subjects & Syllabus (SBC)</h2>
-                <p style="text-align: center; color: var(--text-muted); margin-bottom: 4rem; max-width: 700px; margin-left: auto; margin-right: auto;">
-                    Access the official Syllabus and Teachers Guides for both Junior and Senior Primary levels.
-                </p>
+            <section class="section-full" style="padding: var(--section-spacing) 0;">
+                <div class="section-header">
+                    <h2>Subjects & Syllabus (SBC)</h2>
+                    <p class="section-p" style="color: var(--text-muted); margin: 0;">
+                        Access the official Syllabus and Teachers Guides for both Junior and Senior Primary levels.
+                    </p>
+                </div>
 
-                <div class="glass-panel" style="overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
-                    <div style="overflow-x: auto;">
+                <div class="table-scroll-wrap glass-panel" style="box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+                    <div class="table-inner">
                         <table class="glass-table" style="margin-top: 0; min-width: 900px;">
                             <thead>
                                 <tr style="background: rgba(59, 165, 224, 0.15);">
@@ -141,11 +141,11 @@ window.PrimaryComponent = {
                 </div>
             </section>
 
-            <section class="section-full" style="background: linear-gradient(135deg, rgba(59, 165, 224, 0.1) 0%, rgba(20, 50, 95, 0.05) 100%);">
+            <section class="section-full" style="padding: var(--section-spacing) 0;">
                 <div class="grid-2" style="align-items: center;">
                     <div style="padding: 2rem;">
                         <h2 style="font-size: 2rem; color: var(--accent); margin-bottom: 1.5rem;">Targeting 2026 Goals</h2>
-                        <div class="glass-panel" style="padding: 2rem; margin-bottom: 2rem;">
+                        <div class="glass-panel" style="padding: var(--card-padding); margin-bottom: 2rem;">
                             <h4 style="color: #fff; margin-bottom: 1rem;">RETENTION RATE</h4>
                             <p style="color: var(--text-muted); line-height: 1.6;">Our objective is to reach a 70% retention rate from Grades 1 to 6, ensuring that every child who starts their education stay in the system until they complete basic schooling.</p>
                         </div>

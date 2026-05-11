@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /api/
+Disallow: /admin/
+Disallow: /tmp/
+Disallow: /uploads/private/
+
+Allow: /
+Allow: /assets/
+Allow: /components/
+
+Sitemap: https://education.gov.pg/sitemap.xml

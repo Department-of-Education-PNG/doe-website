@@ -16,6 +16,22 @@ function requireAuth() {
     }
 }
 
+/**
+ * Enforce minimum role requirement
+ */
+function requireRole($requiredRole) {
+    requireAuth();
+    
+    $userRole = $_SESSION['admin_role'] ?? 'editor';
+    
+    // hierarchy: super_admin > editor
+    if ($requiredRole === 'super_admin' && $userRole !== 'super_admin') {
+        http_response_code(403);
+        echo json_encode(['error' => 'Forbidden. Super Admin access required.']);
+        exit;
+    }
+}
+
 function isLoggedIn() {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();

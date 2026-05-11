@@ -1,0 +1,98 @@
+# Root .htaccess — DoE Website Security & Performance
+
+# ─── Security: Prevent directory listing ───────────────
+Options -Indexes
+
+# ─── Security: Block sensitive file types ──────────────
+<FilesMatch "^\.|\.(bak|config|sql|log|ini|sh|js\.map)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ─── Performance: Enable Gzip Compression ──────────────
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# ─── Performance: Enable Browser Caching ───────────────
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
+
+# ─── Routing: Asset Masking & SPA Router ───────────────
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # 0. Short URL for Publications (No prefix - e.g., report.pdf -> uploads/publications/report.pdf)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{DOCUMENT_ROOT}/uploads/publications/$1 -f
+    RewriteRule ^([^/]+\.(pdf|jpg|jpeg|png|webp|svg))$ uploads/publications/$1 [L]
+
+    # 0.05 Short URL for Textbooks (No prefix - e.g., textbook.pdf -> uploads/textbooks/textbook.pdf)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{DOCUMENT_ROOT}/uploads/textbooks/$1 -f
+    RewriteRule ^([^/]+\.(pdf|jpg|jpeg|png|webp|svg))$ uploads/textbooks/$1 [L]
+
+    # 0.1 Short URL for Public Forms (e.g., fstat.Dec.pdf -> uploads/forms/stat.Dec.pdf)
+    RewriteRule ^f([^/]+\.pdf)$ uploads/forms/$1 [L]
+
+    # 1. Mask dynamic feature paths (news, gallery, publications, etc.)
+    RewriteRule ^(news|press|events|gallery|publications|textbooks|jobs|scholarships|forms|notices|apps|calendars)/([^/]+\.(jpg|jpeg|png|gif|webp|svg|pdf))$ uploads/$1/$2 [L]
+    
+    # 2. Mask legacy/default paths
+    RewriteCond %{DOCUMENT_ROOT}/uploads/images/$1 -f
+    RewriteRule ^([^/]+\.(jpg|jpeg|png|gif|webp|svg))$ uploads/images/$1 [L]
+    
+    RewriteCond %{DOCUMENT_ROOT}/uploads/documents/$1 -f
+    RewriteRule ^([^/]+\.(pdf|jpg|jpeg|png))$ uploads/documents/$1 [L]
+
+    # 4. Handle SPA routing
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . index.html [L]
+</IfModule>
+
+# ─── Security & Performance Headers ────────────────────
+<IfModule mod_headers.c>
+    # Cache control for static assets
+    <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf|webp)$">
+        Header set Cache-Control "max-age=2592000, public"
+    </FilesMatch>
+    <FilesMatch "\.(php|html|htm)$">
+        Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
+
+    # Prevent MIME sniffing
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Prevent clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+
+    # XSS Protection for legacy browsers
+    Header always set X-XSS-Protection "1; mode=block"
+
+    # Referrer privacy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Disable unnecessary browser features
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+
+    # Content Security Policy
+    Header always set Content-Security-Policy "default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; frame-src 'self' https://www.google.com; object-src 'self'; connect-src 'self' https:;"
+
+    # Remove server fingerprinting
+    Header unset X-Powered-By
+    Header always unset X-Powered-By
+    Header unset Server
+</IfModule>
