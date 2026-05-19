@@ -324,9 +324,26 @@ a {
 
 @media (min-width: 1025px) {
     .header-container {
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-        gap: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+    .logo {
+        flex: 1 0 0;
+        min-width: 0;
+    }
+    .main-nav {
+        display: flex;
+        justify-content: center;
+        gap: 2rem; /* Equally spaced apart */
+        flex-shrink: 0;
+    }
+    .header-actions {
+        flex: 1 0 0;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
     }
 }
 
