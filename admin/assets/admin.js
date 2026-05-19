@@ -2154,7 +2154,8 @@ async function toggleEdubotEntry(id) {
 }
 
 async function deleteEdubotEntry(id, title) {
-    if (!confirm(`Delete "${title}"?\n\nEduBot will no longer use this knowledge.`)) return;
+    const confirmed = await showConfirmDialog('Delete Knowledge Entry', `Are you sure you want to delete "${title}"? EduBot will no longer use this knowledge.`);
+    if (!confirmed) return;
     const result = await apiGet(`chatbot-knowledge.php?action=delete&id=${id}`);
     if (result.success) {
         showToast('Entry deleted', 'success');
