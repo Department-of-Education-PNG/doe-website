@@ -567,7 +567,7 @@
                 // Update Footer Brand Name (handles the <br> line break if present)
                 if (settings.site_title) {
                     const brandTitle = document.getElementById('footer-brand-title');
-                    if (brandTitle) brandTitle.innerHTML = settings.site_title.replace('Department of ', 'Department of<br>');
+                    if (brandTitle) brandTitle.innerText = settings.site_title;
                 }
             }
 
