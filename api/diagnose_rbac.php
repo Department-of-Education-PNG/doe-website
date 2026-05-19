@@ -3,7 +3,8 @@
  * RBAC Diagnostic & Auto-Fix Tool
  * Use this to verify why tabs are missing and force-fix your account.
  */
-session_start();
+require_once __DIR__ . '/middleware/auth.php';
+safe_session_start();
 require_once __DIR__ . '/config/database.php';
 
 echo "<html><head><title>RBAC Diagnostic</title><style>body{font-family:sans-serif;line-height:1.6;padding:20px;max-width:800px;margin:0 auto;background:#f4f7f6;} .card{background:#white;padding:20px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.1);margin-bottom:20px;} h2{color:#1a1a2e;} .status{padding:10px;border-radius:4px;font-weight:bold;} .success{background:#d4edda;color:#155724;} .error{background:#f8d7da;color:#721c24;} .info{background:#e2e3e5;color:#383d41;} pre{background:#eee;padding:10px;border-radius:4px;overflow-x:auto;}</style></head><body>";

@@ -3,9 +3,9 @@
  * Settings API — Handle global site configuration
  * Standardized for Admin Panel 2.0
  */
-session_start();
-require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/middleware/auth.php';
+safe_session_start();
+require_once __DIR__ . '/helpers.php';
 
 jsonHeaders();
 

@@ -1,5 +1,14 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ($_SERVER['SERVER_PORT'] ?? 80) == 443;
+    session_set_cookie_params([
+        'path' => '/',
+        'secure' => $isSecure,
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
+    session_start();
+}
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header('Location: index.php');
     exit;
@@ -57,6 +66,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
             <i data-lucide="bar-chart-3"></i> Dashboard
         </a>
 
+        <?php if ($_SESSION['admin_role'] !== 'curriculum_admin'): ?>
         <div class="nav-label">Content</div>
         <a class="nav-item" data-page="news" onclick="navigateTo('news')">
             <i data-lucide="newspaper"></i> News & Articles
@@ -76,9 +86,21 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
         <a class="nav-item" data-page="publications" onclick="navigateTo('publications')">
             <i data-lucide="file-text"></i> Publications
         </a>
-        <a class="nav-item" data-page="textbooks" onclick="navigateTo('textbooks')">
-            <i data-lucide="book-open"></i> Textbooks
+        <?php endif; ?>
+
+        <div class="nav-label">Education & Subsidies</div>
+        <a class="nav-item" data-page="gtfs" onclick="navigateTo('gtfs')">
+            <i data-lucide="file-check-2"></i> GTFS Reports
         </a>
+        <a class="nav-item" data-page="textbooks" onclick="navigateTo('textbooks')">
+            <i data-lucide="book-open"></i> Textbooks & Manuals
+        </a>
+        <a class="nav-item" data-page="curriculum" onclick="navigateTo('curriculum')" style="background:linear-gradient(135deg,rgba(59,165,224,0.12),rgba(245,166,35,0.08));border-left:3px solid var(--admin-primary);">
+            <i data-lucide="library"></i> <span>Curriculum Materials</span>
+        </a>
+
+
+        <?php if ($_SESSION['admin_role'] !== 'curriculum_admin'): ?>
         <a class="nav-item" data-page="faq" onclick="navigateTo('faq')">
             <i data-lucide="help-circle"></i> FAQs
         </a>
@@ -107,6 +129,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
         <a class="nav-item" data-page="forms" onclick="navigateTo('forms')">
             <i data-lucide="file-edit"></i> Public Forms
         </a>
+        <?php endif; ?>
 
         <?php if ($_SESSION['admin_role'] === 'super_admin'): ?>
         <div class="nav-label">System Management</div>
@@ -123,9 +146,11 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
             <i data-lucide="brain"></i> <span>EduBot Training</span>
         </a>
         <?php endif; ?>
+        <?php if ($_SESSION['admin_role'] !== 'curriculum_admin'): ?>
         <a class="nav-item" data-page="contact" onclick="navigateTo('contact')">
             <i data-lucide="mail"></i>Contact <span class="badge" id="nav-unread-badge" style="display:none;">0</span>
         </a>
+        <?php endif; ?>
         <?php if ($_SESSION['admin_role'] === 'super_admin'): ?>
         <a class="nav-item" data-page="settings" onclick="navigateTo('settings')">
             <i data-lucide="settings"></i>Settings
@@ -155,6 +180,30 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 
         <!-- ===== DASHBOARD PAGE ===== -->
         <div class="page-section active" id="page-dashboard">
+            <?php if ($_SESSION['admin_role'] === 'curriculum_admin'): ?>
+            <div class="admin-card" style="margin-bottom:2rem; background: linear-gradient(135deg, rgba(59,165,224,0.1), rgba(245,166,35,0.05)); border: none;">
+                <div class="admin-card-body" style="padding: 3rem 2rem; text-align: center;">
+                    <div style="background: white; width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                        <i data-lucide="library" style="width: 32px; height: 32px; color: var(--admin-primary);"></i>
+                    </div>
+                    <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Welcome, <?php echo htmlspecialchars($_SESSION['admin_username']); ?></h2>
+                    <p style="color: var(--admin-muted); max-width: 500px; margin: 0 auto 1.5rem auto;">
+                        You are logged in as a <strong>Curriculum Admin</strong>. You have exclusive access to manage the Department of Education's Curriculum Materials and Textbooks.
+                    </p>
+                    <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap;">
+                        <button class="btn btn-primary" onclick="navigateTo('curriculum')">
+                            <i data-lucide="library"></i> Manage Curriculum
+                        </button>
+                        <button class="btn btn-outline" onclick="navigateTo('textbooks')">
+                            <i data-lucide="book-open"></i> Manage Textbooks
+                        </button>
+                        <button class="btn btn-outline" onclick="navigateTo('gtfs')">
+                            <i data-lucide="file-check-2"></i> GTFS Reports
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <?php else: ?>
             <div class="stats-grid">
                 <div class="stat-card"><div class="stat-icon"><i data-lucide="newspaper"></i></div><div class="stat-value" id="stat-news">0</div><div class="stat-label">News Articles</div></div>
                 <div class="stat-card"><div class="stat-icon"><i data-lucide="megaphone"></i></div><div class="stat-value" id="stat-press">0</div><div class="stat-label">Press Releases</div></div>
@@ -195,6 +244,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
         </div>
 
         <!-- Hero Sliders Page -->
@@ -328,6 +378,31 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
             </div>
         </div>
 
+        <!-- ===== GTFS REPORTS PAGE ===== -->
+        <div class="page-section" id="page-gtfs">
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h2>Government Tuition Fee Subsidy (GTFS)</h2>
+                    <button class="btn btn-primary" onclick="openAddModal('gtfs')"><i data-lucide="plus"></i> Add GTFS Report</button>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>PDF Document</th>
+                                <th>Uploaded</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gtfs-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <!-- ===== FAQ PAGE ===== -->
         <div class="page-section" id="page-faq">
             <div class="admin-card">
@@ -340,6 +415,43 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
                 </div>
             </div>
         </div>
+
+        <!-- ===== CURRICULUM MATERIALS PAGE ===== -->
+        <div class="page-section" id="page-curriculum">
+            <div style="background:linear-gradient(135deg,rgba(59,165,224,0.1),rgba(245,166,35,0.06));border:1px solid rgba(59,165,224,0.2);border-radius:12px;padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;gap:1rem;align-items:center;">
+                <i data-lucide="library" style="color:var(--admin-primary);flex-shrink:0;width:24px;height:24px;"></i>
+                <div style="font-size:0.88rem;line-height:1.6;color:var(--admin-muted);">
+                    <strong style="color:var(--admin-text);">Curriculum Materials</strong> &mdash; Upload Syllabus PDFs and Teacher's Guides for Elementary, Primary, and Secondary education levels. These entries appear live on the public website.
+                </div>
+            </div>
+            <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem;border-bottom:2px solid var(--admin-border);padding-bottom:0;">
+                <button id="ctab-elementary" class="btn btn-primary" onclick="switchCurriculumTab('elementary')" style="border-radius:8px 8px 0 0;font-size:0.85rem;"><i data-lucide="school"></i> Elementary</button>
+                <button id="ctab-primary" class="btn btn-outline" onclick="switchCurriculumTab('primary')" style="border-radius:8px 8px 0 0;font-size:0.85rem;"><i data-lucide="book"></i> Primary</button>
+                <button id="ctab-secondary" class="btn btn-outline" onclick="switchCurriculumTab('secondary')" style="border-radius:8px 8px 0 0;font-size:0.85rem;"><i data-lucide="graduation-cap"></i> Secondary</button>
+                <button class="btn btn-primary" onclick="openCurriculumModal()" style="margin-left:auto;"><i data-lucide="plus-circle"></i> Add Entry</button>
+            </div>
+            <div class="admin-card">
+                <div style="overflow-x:auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Grade / Stage</th>
+                                <th>Subject</th>
+                                <th>Syllabus PDF</th>
+                                <th>Teacher's Guide PDF</th>
+                                <th>Uploaded By</th>
+                                <th>Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="curriculum-tbody">
+                            <tr><td colspan="7" style="text-align:center;padding:3rem;color:var(--admin-muted);">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
 
         <!-- ===== JOBS PAGE ===== -->
         <div class="page-section" id="page-jobs">
@@ -520,7 +632,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
             <div class="admin-card">
                 <div class="admin-card-header">
                     <h2><i data-lucide="users"></i> Admin Users</h2>
-                    <button class="btn btn-primary" onclick="openAddModal('users')"><i data-lucide="plus-circle"></i>Add User</button>
+                    <button class="btn btn-primary" onclick="openUserModal()"><i data-lucide="plus-circle"></i>Add User</button>
                 </div>
                 <div style="overflow-x:auto;">
                     <table class="data-table">
@@ -528,6 +640,8 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
                             <tr>
                                 <th>Username</th>
                                 <th>Full Name</th>
+                                <th>Designation</th>
+                                <th>Role</th>
                                 <th>Email</th>
                                 <th>Last Login</th>
                                 <th>Actions</th>
@@ -1159,6 +1273,77 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     </div>
 </div>
 
+<!-- GTFS Modal -->
+<div class="admin-modal" id="modal-gtfs">
+    <div class="admin-modal-content">
+        <div class="admin-modal-header"><h3>Add/Edit GTFS Report</h3><button class="admin-modal-close" onclick="closeModal('modal-gtfs')">&times;</button></div>
+        <div class="admin-modal-body">
+            <form id="form-gtfs" onsubmit="event.preventDefault();saveRecord('gtfs',this)">
+                <input type="hidden" name="id">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Year *</label>
+                        <select name="year" required>
+                            <?php 
+                            $currentYear = date('Y');
+                            for($y = $currentYear + 1; $y >= 2010; $y--) {
+                                echo "<option value='$y'>$y</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Category *</label>
+                        <select name="category" required onchange="toggleGtfsFields(this.value)">
+                            <option value="Subsidy Report">Subsidy Report (General)</option>
+                            <option value="Project Fees">Project Fees</option>
+                            <option value="Distribution List">Distribution List</option>
+                            <option value="Policy Document">Policy Document</option>
+                            <option value="School Grant">School Grant</option>
+                        </select>
+                    </div>
+                    <div class="form-group gtfs-extra-field" style="display:none;">
+                        <label>Quarter</label>
+                        <select name="quarter">
+                            <option value="">Select Quarter</option>
+                            <option value="Q1">Quarter 1</option>
+                            <option value="Q2">Quarter 2</option>
+                            <option value="Q3">Quarter 3</option>
+                            <option value="Q4">Quarter 4</option>
+                        </select>
+                    </div>
+                    <div class="form-group gtfs-extra-field" style="display:none;">
+                        <label>Region</label>
+                        <select name="region">
+                            <option value="">Select Region</option>
+                            <option value="Highlands">Highlands Region</option>
+                            <option value="Momase">Momase Region</option>
+                            <option value="Southern">Southern Region</option>
+                            <option value="Islands">Islands Region</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width"><label>Report Title *</label><input type="text" name="title" required placeholder="e.g. 2025 Approved GTFS Project Fees"></div>
+                    <div class="form-group full-width">
+                        <label>Upload PDF *</label>
+                        <div class="file-upload-zone" id="zone-gtfs-pdf_path" onclick="document.getElementById('file-gtfs-pdf_path').click()" ondragover="event.preventDefault();this.classList.add('dragging')" ondragleave="this.classList.remove('dragging')" ondrop="event.preventDefault();this.classList.remove('dragging');if(event.dataTransfer.files[0])handleModalUploadFile(event.dataTransfer.files[0],'gtfs','pdf_path','document','gtfs')">
+                            <span class="upload-icon">📄</span>
+                            <p>Click or drag &amp; drop PDF here</p>
+                            <small>PDF only • Max 10MB</small>
+                        </div>
+                        <input type="file" id="file-gtfs-pdf_path" accept=".pdf" style="display:none" onchange="handleModalUpload(this,'gtfs','pdf_path','document','gtfs')">
+                        <div id="preview-gtfs-pdf_path" class="upload-preview-box"></div>
+                        <input type="hidden" name="pdf_path" required>
+                    </div>
+                </div>
+                <div class="admin-modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('modal-gtfs')">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i data-lucide="save"></i> Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- Jobs Modal -->
 <div class="admin-modal" id="modal-jobs">
     <div class="admin-modal-content">
@@ -1290,9 +1475,34 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
             <form id="form-notices" onsubmit="event.preventDefault();saveRecord('notices',this)">
                 <div class="form-grid">
                     <div class="form-group full-width"><label>Title *</label><input type="text" name="title" required></div>
-                    <div class="form-group"><label>Card Type</label><select name="card_type"><option value="dates">Term Dates</option><option value="plan">Education Plan</option><option value="quick_links">Quick Links</option></select></div>
+                    <div class="form-group">
+                        <label>Card Type</label>
+                        <select name="card_type" id="notices-card-type-select" onchange="handleNoticeTypeChange(this.value)">
+                            <option value="dates">Term Dates</option>
+                            <option value="plan">Education Plan</option>
+                            <option value="quick_links">Quick Links</option>
+                            <option value="__NEW__">+ Add New Type...</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="notices-new-type-wrap" style="display:none;">
+                        <label>New Card Type Name *</label>
+                        <input type="text" id="notices-new-type-input" placeholder="e.g. notices, announcements">
+                    </div>
                     <div class="form-group"><label>Sort Order</label><input type="number" name="sort_order" value="0"></div>
                     <div class="form-group full-width"><label>Content (HTML)</label><textarea id="notices-content" name="content" rows="6" class="rich-editor"></textarea></div>
+                    
+                    <div class="form-group full-width">
+                        <label>Document Cover Image (Mainly for Education Plan)</label>
+                        <div class="file-upload-zone" id="zone-notices-thumbnail_path" onclick="document.getElementById('file-notices-thumbnail_path').click()" ondragover="event.preventDefault();this.classList.add('dragging')" ondragleave="this.classList.remove('dragging')" ondrop="event.preventDefault();this.classList.remove('dragging');if(event.dataTransfer.files[0])handleModalUploadFile(event.dataTransfer.files[0],'notices','thumbnail_path','image','notices')">
+                            <span class="upload-icon">📷</span>
+                            <p>Click or drag &amp; drop image here</p>
+                            <small>Image only • Max 10MB</small>
+                        </div>
+                        <input type="file" id="file-notices-thumbnail_path" accept="image/*" style="display:none" onchange="handleModalUpload(this,'notices','thumbnail_path','image','notices')">
+                        <div id="preview-notices-thumbnail_path" class="upload-preview-box"></div>
+                        <input type="hidden" name="thumbnail_path">
+                    </div>
+
                     <div class="form-group full-width">
                         <label>Attachment PDF</label>
                         <div class="file-upload-zone" id="zone-notices-pdf_path" onclick="document.getElementById('file-notices-pdf_path').click()" ondragover="event.preventDefault();this.classList.add('dragging')" ondragleave="this.classList.remove('dragging')" ondrop="event.preventDefault();this.classList.remove('dragging');if(event.dataTransfer.files[0])handleModalUploadFile(event.dataTransfer.files[0],'notices','pdf_path','document','notices')">
@@ -1408,37 +1618,6 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     </div>
 </div>
 
-<!-- Users Modal -->
-<div class="admin-modal" id="modal-users">
-    <div class="admin-modal-content">
-        <div class="admin-modal-header"><h3>Add/Edit User</h3><button class="admin-modal-close" onclick="closeModal('modal-users')">&times;</button></div>
-        <div class="admin-modal-body">
-            <form id="form-users" onsubmit="event.preventDefault();saveRecord('users',this)">
-                <input type="hidden" name="id">
-                <div class="form-grid">
-                    <div class="form-group"><label>Username *</label><input type="text" name="username" required></div>
-                    <div class="form-group"><label>Full Name *</label><input type="text" name="full_name" required></div>
-                    <div class="form-group"><label>Email *</label><input type="email" name="email" required></div>
-                    <div class="form-group">
-                        <label>Role *</label>
-                        <select name="role" required>
-                            <option value="editor">Editor (Content Only)</option>
-                            <option value="super_admin">Super Admin (Full Access)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" name="password" placeholder="Leave blank to keep same">
-                    </div>
-                </div>
-                <div class="admin-modal-footer">
-                    <button type="button" class="btn btn-outline" onclick="closeModal('modal-users')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save User</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
 <!-- View Contact Modal -->
 <div class="admin-modal" id="modal-view-contact">
@@ -1461,6 +1640,121 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
         </div>
     </div>
 </div>
+
+<!-- Users Modal -->
+<div class="admin-modal" id="modal-users">
+    <div class="admin-modal-content" style="max-width:580px;">
+        <div class="admin-modal-header">
+            <h3 id="users-modal-title"><i data-lucide="user-plus"></i> Add Admin User</h3>
+            <button class="admin-modal-close" onclick="closeModal('modal-users')">&times;</button>
+        </div>
+        <div class="admin-modal-body">
+            <form id="form-users" onsubmit="event.preventDefault(); saveUserRecord()">
+                <input type="hidden" id="user-id" value="">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Username *</label>
+                        <input type="text" id="user-username" required placeholder="e.g. jsmith" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>Password <span id="user-pw-hint" style="font-weight:400;color:var(--admin-muted);font-size:0.78rem;">(required for new users)</span></label>
+                        <input type="password" id="user-password" placeholder="Leave blank to keep current" autocomplete="new-password">
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="user-fullname" required placeholder="e.g. John Smith">
+                    </div>
+                    <div class="form-group">
+                        <label>Designation</label>
+                        <input type="text" id="user-designation" placeholder="e.g. Curriculum Officer">
+                    </div>
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input type="email" id="user-email" required placeholder="e.g. jsmith@doe.gov.pg">
+                    </div>
+                    <div class="form-group">
+                        <label>Role *</label>
+                        <select id="user-role" required onchange="toggleDesignationHint(this.value)">
+                            <option value="" disabled selected>— Select a role —</option>
+                            <option value="super_admin">Super Admin — Full Access</option>
+                            <option value="curriculum_admin">Curriculum Admin — Content Only</option>
+                            <option value="editor">Editor — General Content</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width" id="designation-hint" style="display:none;">
+                        <div style="background:rgba(59,165,224,0.08);border-left:3px solid var(--admin-primary);padding:0.75rem 1rem;border-radius:0 8px 8px 0;font-size:0.83rem;color:var(--admin-muted);">
+                            <strong style="color:var(--admin-text);">Curriculum Admin</strong> can only access Curriculum Materials and Textbooks. All their actions are recorded in Activity Logs.
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('modal-users')">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i data-lucide="save"></i> Save User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Curriculum Materials Modal -->
+<div class="admin-modal" id="modal-curriculum">
+    <div class="admin-modal-content" style="max-width:600px;">
+        <div class="admin-modal-header">
+            <h3 id="curriculum-modal-title"><i data-lucide="library"></i> Add Curriculum Entry</h3>
+            <button class="admin-modal-close" onclick="closeModal('modal-curriculum')">&times;</button>
+        </div>
+        <div class="admin-modal-body">
+            <form id="form-curriculum" onsubmit="event.preventDefault(); saveCurriculumEntry()">
+                <input type="hidden" id="curriculum-id" value="">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Education Level *</label>
+                        <select id="curriculum-level" class="no-custom" required>
+                            <option value="elementary">Elementary</option>
+                            <option value="primary">Primary</option>
+                            <option value="secondary">Secondary</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Grade / Stage *</label>
+                        <input type="text" id="curriculum-grade" required placeholder="e.g. Elementary Prep, Grade 3">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Subject *</label>
+                        <input type="text" id="curriculum-subject" required placeholder="e.g. Mathematics, English">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Syllabus PDF</label>
+                        <div class="file-upload-zone" id="zone-curriculum-syllabus" onclick="document.getElementById('file-curriculum-syllabus').click()" ondragover="event.preventDefault();this.classList.add('dragging')" ondragleave="this.classList.remove('dragging')" ondrop="event.preventDefault();this.classList.remove('dragging');if(event.dataTransfer.files[0])handleCurriculumUpload(event.dataTransfer.files[0],'syllabus_url')">
+                            <i data-lucide="file-text" style="width:24px;height:24px;margin-bottom:0.5rem;"></i>
+                            <p>Click or drag &amp; drop Syllabus PDF here</p>
+                            <small>PDF only • Max 20MB</small>
+                        </div>
+                        <input type="file" id="file-curriculum-syllabus" accept=".pdf" style="display:none" onchange="handleCurriculumUpload(this.files[0],'syllabus_url')">
+                        <div id="preview-curriculum-syllabus" class="upload-preview-box"></div>
+                        <input type="hidden" id="curriculum-syllabus_url">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Teacher's Guide PDF</label>
+                        <div class="file-upload-zone" id="zone-curriculum-guide" onclick="document.getElementById('file-curriculum-guide').click()" ondragover="event.preventDefault();this.classList.add('dragging')" ondragleave="this.classList.remove('dragging')" ondrop="event.preventDefault();this.classList.remove('dragging');if(event.dataTransfer.files[0])handleCurriculumUpload(event.dataTransfer.files[0],'teachers_guide_url')">
+                            <i data-lucide="file-text" style="width:24px;height:24px;margin-bottom:0.5rem;"></i>
+                            <p>Click or drag &amp; drop Teacher's Guide PDF here</p>
+                            <small>PDF only • Max 20MB</small>
+                        </div>
+                        <input type="file" id="file-curriculum-guide" accept=".pdf" style="display:none" onchange="handleCurriculumUpload(this.files[0],'teachers_guide_url')">
+                        <div id="preview-curriculum-guide" class="upload-preview-box"></div>
+                        <input type="hidden" id="curriculum-teachers_guide_url">
+                    </div>
+                </div>
+                <div class="admin-modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('modal-curriculum')">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i data-lucide="save"></i> Save Entry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <!-- Change Password Modal -->
 <div class="admin-modal" id="modal-password">

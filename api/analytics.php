@@ -2,10 +2,10 @@
 /**
  * Analytics API — Content & Message Insights
  */
-session_start();
+require_once __DIR__ . '/middleware/auth.php';
+safe_session_start();
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/helpers.php';
-require_once __DIR__ . '/middleware/auth.php';
 
 // Auth Check
 jsonHeaders();

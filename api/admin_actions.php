@@ -2,10 +2,10 @@
 /**
  * Admin Actions — Daily Backups & DB Management
  */
-session_start();
+require_once __DIR__ . '/middleware/auth.php';
+safe_session_start();
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/helpers.php';
-require_once __DIR__ . '/middleware/auth.php';
 
 // Strict Admin Check
 requireAuth();
