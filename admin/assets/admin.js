@@ -16,7 +16,7 @@ function navigateTo(page) {
 
     if (section) {
         section.classList.add('active');
-        
+
         // Re-initialize any rich editors in this section if they didn't catch on boot
         if (typeof tinymce !== 'undefined') {
             section.querySelectorAll('textarea.rich-editor').forEach(el => {
@@ -100,35 +100,42 @@ function initCustomSelects(parent = document) {
 
         const container = document.createElement('div');
         container.className = 'custom-select-container';
-        
+
         const trigger = document.createElement('div');
         trigger.className = 'custom-select-trigger';
-        
+
         const selectedOption = select.options[select.selectedIndex];
+        const isPlaceholder = selectedOption && (selectedOption.disabled || selectedOption.value === '');
         trigger.textContent = selectedOption ? selectedOption.textContent : 'Select...';
-        
+        if (isPlaceholder) trigger.style.color = 'var(--admin-muted, #9ca3af)';
+        else trigger.style.color = '';
+
         const optionsList = document.createElement('div');
         optionsList.className = 'custom-options-list';
-        
+
         Array.from(select.options).forEach((opt, idx) => {
+            // Skip disabled placeholder options from the visible list
+            if (opt.disabled) return;
+
             const customOpt = document.createElement('div');
             customOpt.className = 'custom-option' + (opt.selected ? ' selected' : '');
             customOpt.textContent = opt.textContent;
-            
+
             customOpt.onclick = (e) => {
                 e.stopPropagation();
                 select.selectedIndex = idx;
                 trigger.textContent = opt.textContent;
-                
+                trigger.style.color = '';
+
                 optionsList.querySelectorAll('.custom-option').forEach(o => o.classList.remove('selected'));
                 customOpt.classList.add('selected');
-                
+
                 container.classList.remove('open');
                 select.dispatchEvent(new Event('change', { bubbles: true }));
             };
             optionsList.appendChild(customOpt);
         });
-        
+
         trigger.onclick = (e) => {
             e.stopPropagation();
             document.querySelectorAll('.custom-select-container.open').forEach(c => {
@@ -136,7 +143,7 @@ function initCustomSelects(parent = document) {
             });
             container.classList.toggle('open');
         };
-        
+
         select.parentNode.insertBefore(container, select);
         container.appendChild(select);
         container.appendChild(trigger);
@@ -172,11 +179,11 @@ function syncCustomSelects(parent = document) {
         const select = container.querySelector('select');
         const trigger = container.querySelector('.custom-select-trigger');
         const optionsList = container.querySelector('.custom-options-list');
-        
+
         if (select && trigger) {
             const selectedOption = select.options[select.selectedIndex];
             trigger.textContent = selectedOption ? selectedOption.textContent : 'Select...';
-            
+
             // Sync selected class in options
             if (optionsList) {
                 optionsList.querySelectorAll('.custom-option').forEach((opt, idx) => {
@@ -199,15 +206,15 @@ function refreshCustomSelects(parent = document) {
         const select = container.querySelector('select');
         const trigger = container.querySelector('.custom-select-trigger');
         const optionsList = container.querySelector('.custom-options-list');
-        
+
         if (select && trigger) {
-             const selectedOption = select.options[select.selectedIndex];
-             trigger.textContent = selectedOption ? selectedOption.textContent : 'Select...';
-             if (optionsList) {
-                 Array.from(optionsList.children).forEach((optEl, idx) => {
-                     optEl.classList.toggle('selected', idx === select.selectedIndex);
-                 });
-             }
+            const selectedOption = select.options[select.selectedIndex];
+            trigger.textContent = selectedOption ? selectedOption.textContent : 'Select...';
+            if (optionsList) {
+                Array.from(optionsList.children).forEach((optEl, idx) => {
+                    optEl.classList.toggle('selected', idx === select.selectedIndex);
+                });
+            }
         }
     });
 }
@@ -223,7 +230,7 @@ async function apiGet(endpoint) {
     try {
         const r = await fetch(`${API_BASE}/${endpoint}`, { credentials: 'same-origin' });
         const result = await r.json();
-        
+
         if (!r.ok) {
             const errorMsg = result.error || `Server Error (${r.status})`;
             showToast(errorMsg, 'error');
@@ -288,7 +295,7 @@ function showToast(message, type = 'success') {
 
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
-    
+
     // Icon selection
     let iconName = 'check-circle';
     if (type === 'error') iconName = 'alert-circle';
@@ -300,7 +307,7 @@ function showToast(message, type = 'success') {
     `;
 
     container.appendChild(toast);
-    
+
     // Refresh icons
     if (window.lucide) lucide.createIcons();
 
@@ -318,9 +325,9 @@ const CK_EDITORS = {};
 function setEditorContent(id, content) {
     const textarea = document.getElementById(id);
     if (textarea) textarea.value = content || '';
-    
+
     // Handle Ace Editor if it exists
-    if (ACE_EDITORS[id]) {
+    if (typeof ACE_EDITORS !== 'undefined' && ACE_EDITORS[id]) {
         ACE_EDITORS[id].setValue(content || '', -1);
         return;
     }
@@ -343,7 +350,7 @@ function openModal(id) {
     const modal = document.getElementById(id);
     if (modal) {
         modal.classList.add('show');
-        
+
         // Custom select support
         initCustomSelects(modal);
         refreshCustomSelects(modal);
@@ -365,7 +372,7 @@ function openModal(id) {
                 }
             });
         }
-        
+
 
         // Focus first input
         setTimeout(() => {
@@ -413,7 +420,8 @@ const ENDPOINTS = {
     'calendars': 'publications.php',
     'faq': 'faq.php',
     'users': 'users.php',
-    'logs': 'users.php'
+    'logs': 'users.php',
+    'gtfs': 'gtfs.php'
 };
 
 async function loadLogsTable() {
@@ -431,7 +439,7 @@ async function loadLogsTable() {
     tbody.innerHTML = result.data.map(log => {
         const date = new Date(log.created_at);
         const timeStr = date.toLocaleDateString('en-PG', { day: 'numeric', month: 'short' }) + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
+
         return `
             <tr>
                 <td style="white-space:nowrap;font-size:0.85rem;color:var(--admin-muted);">${timeStr}</td>
@@ -446,39 +454,41 @@ async function loadLogsTable() {
 
 // ===== FILE FIELDS PER PAGE (field => type) =====
 const FILE_FIELDS = {
-    'news':         [['image_path', 'image']],
-    'press':        [['image_path', 'image'], ['pdf_path', 'document']],
-    'events':       [['image_path', 'image']],
-    'gallery':      [['cover_image', 'image']],
+    'news': [['image_path', 'image']],
+    'press': [['image_path', 'image'], ['pdf_path', 'document']],
+    'events': [['image_path', 'image']],
+    'gallery': [['cover_image', 'image']],
     'publications': [['pdf_path', 'document'], ['thumbnail_path', 'image']],
-    'textbooks':    [['textbook_pdf', 'document'], ['manual_pdf', 'document']],
-    'jobs':         [['pdf_path', 'document']],
-    'notices':      [['pdf_path', 'document']],
-    'forms':        [['pdf_path', 'document']],
-    'apps':         [['image_path', 'image']],
-    'sliders':      [['image_path', 'image']],
-    'calendars':    [['pdf_path', 'document'], ['thumbnail_path', 'image']]
+    'textbooks': [['textbook_pdf', 'document'], ['manual_pdf', 'document']],
+    'gtfs': [['pdf_path', 'document']],
+    'jobs': [['pdf_path', 'document']],
+    'notices': [['pdf_path', 'document'], ['thumbnail_path', 'image']],
+    'forms': [['pdf_path', 'document']],
+    'apps': [['image_path', 'image']],
+    'sliders': [['image_path', 'image']],
+    'calendars': [['pdf_path', 'document'], ['thumbnail_path', 'image']]
 };
 
 // ===== LOAD PAGE DATA =====
 async function loadPageData(page) {
-    switch(page) {
-        case 'dashboard':     loadDashboard(); break;
-        case 'news':          loadCrudTable('news.php?action=list', 'news', ['title', 'date_published', 'views', 'status']); break;
-        case 'press':         loadCrudTable('press-releases.php?action=list', 'press', ['title', 'date_published', 'views', 'status']); break;
-        case 'events':        loadCrudTable('events.php?action=list', 'events', ['title', 'event_date', 'location', 'status']); break;
-        case 'calendars':     loadCrudTable('publications.php?action=list&category=Calendars', 'calendars', ['title', 'year', 'created_at']); break;
-        case 'gallery':       loadCrudTable('gallery.php?action=list', 'gallery', ['title', 'tag', 'photo_count']); break;
-        case 'publications':  loadCrudTable('publications.php?action=list', 'publications', ['title', 'category', 'year']); break;
-        case 'textbooks':     loadCrudTable('textbooks.php?action=list', 'textbooks', ['grade_level', 'subject']); break;
-        case 'jobs':          loadCrudTable('jobs.php?action=list', 'jobs', ['title', 'section', 'job_type', 'closing_date', 'status']); break;
-        case 'scholarships':  loadCrudTable('scholarships.php?action=list', 'scholarships', ['title', 'deadline', 'status']); break;
-        case 'forms':         loadCrudTable('forms.php?action=list', 'forms', ['title', 'category', 'pdf_path']); break;
-        case 'ticker':        loadCrudTable('ticker.php?action=list', 'ticker', ['label', 'text', 'is_active']); break;
-        case 'notices':       loadCrudTable('notices.php?action=list', 'notices', ['title', 'card_type', 'is_active']); break;
-        case 'leaders':       loadLeaders(); break;
-        case 'apps':          loadCrudTable('app-links.php?action=list', 'apps', ['title', 'category', 'url', 'is_active']); break;
-        case 'faq':           loadCrudTable('faq.php?action=list', 'faq', ['question', 'category', 'sort_order', 'is_active']); break;
+    switch (page) {
+        case 'dashboard': loadDashboard(); break;
+        case 'news': loadCrudTable('news.php?action=list', 'news', ['title', 'date_published', 'views', 'status']); break;
+        case 'press': loadCrudTable('press-releases.php?action=list', 'press', ['title', 'date_published', 'views', 'status']); break;
+        case 'events': loadCrudTable('events.php?action=list', 'events', ['title', 'event_date', 'location', 'status']); break;
+        case 'calendars': loadCrudTable('publications.php?action=list&category=Calendars', 'calendars', ['title', 'year', 'created_at']); break;
+        case 'gallery': loadCrudTable('gallery.php?action=list', 'gallery', ['title', 'tag', 'photo_count']); break;
+        case 'publications': loadCrudTable('publications.php?action=list', 'publications', ['title', 'category', 'year']); break;
+        case 'textbooks': loadCrudTable('textbooks.php?action=list', 'textbooks', ['grade_level', 'subject']); break;
+        case 'gtfs': loadCrudTable('gtfs.php?action=list', 'gtfs', ['year', 'title', 'category', 'pdf_path', 'uploaded_at']); break;
+        case 'jobs': loadCrudTable('jobs.php?action=list', 'jobs', ['title', 'section', 'job_type', 'closing_date', 'status']); break;
+        case 'scholarships': loadCrudTable('scholarships.php?action=list', 'scholarships', ['title', 'deadline', 'status']); break;
+        case 'forms': loadCrudTable('forms.php?action=list', 'forms', ['title', 'category', 'pdf_path']); break;
+        case 'ticker': loadCrudTable('ticker.php?action=list', 'ticker', ['label', 'text', 'is_active']); break;
+        case 'notices': loadCrudTable('notices.php?action=list', 'notices', ['title', 'card_type', 'is_active']); break;
+        case 'leaders': loadLeaders(); break;
+        case 'apps': loadCrudTable('app-links.php?action=list', 'apps', ['title', 'category', 'url', 'is_active']); break;
+        case 'faq': loadCrudTable('faq.php?action=list', 'faq', ['question', 'category', 'sort_order', 'is_active']); break;
         case 'contact':
             loadContact();
             break;
@@ -488,9 +498,9 @@ async function loadPageData(page) {
         case 'logs':
             loadLogsTable();
             break;
-        case 'sliders':       loadCrudTable('sliders.php?action=list', 'sliders', ['image_path', 'title', 'sort_order', 'is_active']); break;
-        case 'settings':      loadSettings(); break;
-        case 'edubot':        loadEdubotTable(); break;
+        case 'sliders': loadCrudTable('sliders.php?action=list', 'sliders', ['image_path', 'title', 'sort_order', 'is_active']); break;
+        case 'settings': loadSettings(); break;
+        case 'edubot': loadEdubotTable(); break;
     }
 }
 
@@ -550,7 +560,7 @@ async function loadAnalytics() {
         const ctxContact = document.getElementById('contactInsightsChart');
         if (ctxContact) {
             if (contactChart) contactChart.destroy();
-            
+
             const datasets = result.messageDailyTrend || [];
             const labels = datasets.map(d => d.date);
             const data = datasets.map(d => d.count);
@@ -590,7 +600,7 @@ async function loadAnalytics() {
         if (ctxActivity) {
             if (activityChart) activityChart.destroy();
             const counts = result.contentDistribution || {};
-            
+
             activityChart = new Chart(ctxActivity, {
                 type: 'bar',
                 data: {
@@ -605,7 +615,7 @@ async function loadAnalytics() {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
-                    scales: { 
+                    scales: {
                         y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
                         x: { grid: { display: false } }
                     }
@@ -618,7 +628,7 @@ async function loadAnalytics() {
         if (ctxJobViews && result.topContent && result.topContent.Jobs) {
             if (jobViewsChart) jobViewsChart.destroy();
             const topJobs = result.topContent.Jobs;
-            
+
             jobViewsChart = new Chart(ctxJobViews, {
                 type: 'bar',
                 data: {
@@ -635,7 +645,7 @@ async function loadAnalytics() {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
-                    scales: { 
+                    scales: {
                         x: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
                         y: { grid: { display: false } }
                     }
@@ -697,61 +707,65 @@ async function loadCrudTable(endpoint, page, columns) {
     tbody.innerHTML = result.data.map(row => `
         <tr data-id="${row.id}">
             ${columns.map(col => {
-                let val = row[col];
-                if (val === null || val === undefined) val = '—';
+        let val = row[col];
+        if (val === null || val === undefined) val = '—';
 
-                // Format specific columns
-                if (col === 'status') {
-                    val = `<span class="status status-${val}">${val}</span>`;
-                } else if (col === 'is_active') {
-                    val = val == 1
-                        ? '<span class="status status-published">Active</span>'
-                        : '<span class="status status-draft">Inactive</span>';
-                } else if (col === 'image_path') {
-                    const imgUrl = val !== '—' ? (val.startsWith('http') ? val : `../${val}`) : '';
-                    val = imgUrl 
-                        ? `<img src="${imgUrl}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;border:1px solid var(--admin-border);">`
-                        : '—';
-                } else if (col === 'url' || col === 'pdf_path' || col === 'textbook_pdf' || col === 'manual_pdf') {
-                    const short = String(val).length > 35 ? String(val).substring(0, 35) + '…' : val;
-                    // For masked paths (forms/publications/textbooks), they should point to root (../ from admin)
-                    let finalUrl = val;
-                    if (val !== '—' && !val.startsWith('http') && !val.startsWith('../')) {
-                        finalUrl = `../${val}`;
+        // Format specific columns
+        if (col === 'status') {
+            val = `<span class="status status-${val}">${val}</span>`;
+        } else if (col === 'is_active') {
+            val = val == 1
+                ? '<span class="status status-published">Active</span>'
+                : '<span class="status status-draft">Inactive</span>';
+        } else if (col === 'image_path' || col === 'cover_image' || col === 'thumbnail_path') {
+            let imgPath = val;
+            if (imgPath !== '—' && !imgPath.startsWith('http') && !imgPath.startsWith('uploads/')) {
+                // iec handler removed
+            }
+            const imgUrl = imgPath !== '—' ? (imgPath.startsWith('http') ? imgPath : `../${imgPath}`) : '';
+            val = imgUrl
+                ? `<img src="${imgUrl}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;border:1px solid var(--admin-border);">`
+                : '—';
+        } else if (col === 'url' || col === 'pdf_path' || col === 'textbook_pdf' || col === 'manual_pdf') {
+            const short = String(val).length > 35 ? String(val).substring(0, 35) + '…' : val;
+            // For masked paths (forms/publications/textbooks), they should point to root (../ from admin)
+            let finalUrl = val;
+            if (val !== '—' && !val.startsWith('http') && !val.startsWith('../')) {
+                finalUrl = `../${val}`;
+            }
+            val = `<a href="${finalUrl}" target="_blank" class="table-link" title="${val}">${short}</a>`;
+        } else if (col === 'date_published' || col === 'event_date' || col === 'closing_date' || col === 'deadline' || col === 'last_login' || col === 'created_at') {
+            if (val && val !== '—') {
+                try {
+                    const date = new Date(val);
+                    val = date.toLocaleDateString('en-PG', { day: 'numeric', month: 'short', year: 'numeric' });
+                    if (col === 'last_login' || col === 'created_at') {
+                        val += ` <small>${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>`;
                     }
-                    val = `<a href="${finalUrl}" target="_blank" class="table-link" title="${val}">${short}</a>`;
-                } else if (col === 'date_published' || col === 'event_date' || col === 'closing_date' || col === 'deadline' || col === 'last_login' || col === 'created_at') {
-                    if (val && val !== '—') {
-                        try { 
-                            const date = new Date(val);
-                            val = date.toLocaleDateString('en-PG', { day: 'numeric', month: 'short', year: 'numeric' }); 
-                            if (col === 'last_login' || col === 'created_at') {
-                                val += ` <small>${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>`;
-                            }
-                        } catch(e) {}
-                    }
-                } else if (col === 'title') {
-                    const short = String(val).length > 60 ? String(val).substring(0, 60) + '…' : val;
-                    val = `<span title="${val}">${short}</span>`;
-                } else if (col === 'text') {
-                    const short = String(val).length > 55 ? String(val).substring(0, 55) + '…' : val;
-                    val = `<span title="${val}">${short}</span>`;
-                } else if (col === 'category') {
-                    // Prettify category slugs
-                    val = String(val).replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-                } else if (col === 'job_type') {
-                    val = String(val).replace(/\b\w/g, c => c.toUpperCase());
-                }
+                } catch (e) { }
+            }
+        } else if (col === 'title') {
+            const short = String(val).length > 60 ? String(val).substring(0, 60) + '…' : val;
+            val = `<span title="${val}">${short}</span>`;
+        } else if (col === 'text') {
+            const short = String(val).length > 55 ? String(val).substring(0, 55) + '…' : val;
+            val = `<span title="${val}">${short}</span>`;
+        } else if (col === 'category') {
+            // Prettify category slugs
+            val = String(val).replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        } else if (col === 'job_type') {
+            val = String(val).replace(/\b\w/g, c => c.toUpperCase());
+        }
 
-                return `<td>${val}</td>`;
-            }).join('')}
+        return `<td>${val}</td>`;
+    }).join('')}
             <td class="actions">
                 <div class="actions-wrapper">
                     ${page === 'gallery' ? `
                     <button class="btn btn-sm btn-primary" onclick="managePhotos(${row.id})"><i data-lucide="images"></i>Photos</button>
                     ` : ''}
                     <button class="btn btn-sm btn-outline" onclick="editRecord('${page}', ${row.id})"><i data-lucide="edit-3"></i>Edit</button>
-                    ${(userRole === 'super_admin' || ['calendars', 'apps', 'ticker', 'notices', 'forms', 'publications', 'textbooks', 'jobs', 'scholarships'].includes(page)) ? `
+                    ${(userRole === 'super_admin' || ['calendars', 'apps', 'ticker', 'notices', 'forms', 'publications', 'textbooks', 'jobs', 'scholarships', 'gtfs'].includes(page)) ? `
                     <button class="btn btn-sm btn-danger" onclick="deleteRecord('${page}', ${row.id})"><i data-lucide="trash-2"></i></button>
                     ` : ''}
                 </div>
@@ -767,7 +781,7 @@ async function loadCrudTable(endpoint, page, columns) {
 
 // ===== DELETE RECORD =====
 async function deleteRecord(page, id) {
-    if (userRole !== 'super_admin' && !['calendars', 'apps', 'ticker', 'notices', 'forms', 'publications', 'textbooks', 'jobs', 'scholarships'].includes(page)) {
+    if (userRole !== 'super_admin' && !['calendars', 'apps', 'ticker', 'notices', 'forms', 'publications', 'textbooks', 'jobs', 'scholarships', 'gtfs'].includes(page)) {
         showToast('Permission Denied: Only Super Admins can delete records.', 'error');
         return;
     }
@@ -786,78 +800,114 @@ async function deleteRecord(page, id) {
     }
 }
 
-// ===== EDIT RECORD =====
+// ===== EDIT RECORD ROUTER =====
 async function editRecord(page, id) {
-    const endpoint = ENDPOINTS[page];
-    if (!endpoint) return;
-
-    // Show loading state on edit button
-    showToast('Loading record…', 'info');
-
-    const result = await apiGet(`${endpoint}?action=get&id=${id}`);
-    if (result.error) {
-        showToast(result.error, 'error');
-        return;
+    if (page === 'users') {
+        await editUser(id);
+    } else if (page === 'curriculum') {
+        await editCurriculumEntry(id);
+    } else if (page === 'edubot') {
+        await editEdubotEntry(id);
+    } else {
+        await editRecordGeneric(page, id);
     }
+}
 
-    const modalId = `modal-${page}`;
-    const modal = document.getElementById(modalId);
-    if (!modal) return;
+// ===== EDIT RECORD =====
+async function editRecordGeneric(page, id) {
+    try {
+        const endpoint = ENDPOINTS[page];
+        if (!endpoint) return;
 
-    const form = modal.querySelector('form');
-    if (form) {
-        form.reset();
-        form.dataset.editId = id;
+        // Show loading state on edit button
+        showToast('Loading record…', 'info');
 
-        // Clear all upload previews before populating
-        modal.querySelectorAll('.upload-preview-box').forEach(el => el.innerHTML = '');
+        const result = await apiGet(`${endpoint}?action=get&id=${id}`);
+        if (result.error) {
+            showToast(result.error, 'error');
+            return;
+        }
 
-        // Populate all fields
-        Object.keys(result).forEach(key => {
-            const input = form.querySelector(`[name="${key}"]`);
-            if (!input) return;
-            if (input.type === 'checkbox') {
-                input.checked = result[key] == 1;
-            } else if (input.tagName === 'SELECT') {
-                input.value = result[key] || '';
-            } else {
-                input.value = result[key] !== null ? result[key] : '';
+        const modalId = `modal-${page}`;
+        const modal = document.getElementById(modalId);
+        if (!modal) {
+            showToast(`Modal ${modalId} not found`, 'error');
+            return;
+        }
+
+        const form = modal.querySelector('form');
+        if (form) {
+            form.reset();
+            form.dataset.editId = id;
+
+            // Clear all upload previews before populating
+            modal.querySelectorAll('.upload-preview-box').forEach(el => el.innerHTML = '');
+
+            // Populate all fields
+            Object.keys(result).forEach(key => {
+                try {
+                    const input = form.querySelector(`[name="${key}"]`);
+                    if (!input) return;
+                    if (input.type === 'checkbox') {
+                        input.checked = result[key] == 1;
+                    } else if (input.tagName === 'SELECT') {
+                        input.value = result[key] || '';
+                    } else {
+                        input.value = result[key] !== null ? result[key] : '';
+                    }
+                } catch (e) {
+                    console.error('Error populating field:', key, e);
+                }
+            });
+
+            // Trigger GTFS fields toggle
+            if (page === 'gtfs') {
+                toggleGtfsFields(result.category);
             }
-        });
 
-        // Sync TinyMCE editors
-        const fieldPage = page;
-        ['content', 'description'].forEach(field => {
-            const editorId = `${fieldPage}-${field}`;
-            if (result[field] !== undefined) {
-                setEditorContent(editorId, result[field]);
-            }
-        });
 
-        // Show previews for existing uploaded files
-        const filePage = page;
-        (FILE_FIELDS[filePage] || []).forEach(([field, type]) => {
-            if (result[field]) showExistingFilePreview(filePage, field, result[field], type);
-        });
+            // Sync TinyMCE editors
+            const fieldPage = page;
+            ['content', 'description'].forEach(field => {
+                const editorId = `${fieldPage}-${field}`;
+                if (result[field] !== undefined) {
+                    setEditorContent(editorId, result[field]);
+                }
+            });
 
-        // Sync custom selects after population
-        syncCustomSelects(modal);
+            // Show previews for existing uploaded files
+            const filePage = page;
+            (FILE_FIELDS[filePage] || []).forEach(([field, type]) => {
+                if (result[field]) showExistingFilePreview(filePage, field, result[field], type);
+            });
 
-        // Update modal title
-        const headerEl = modal.querySelector('.admin-modal-header h3');
-        if (headerEl) headerEl.textContent = `Edit ${getPageTitle(page).replace(/s$/, '')}`;
-    }
+            // Sync custom selects after population
+            syncCustomSelects(modal);
 
-    openModal(modalId);
+            // Update modal title
+            const headerEl = modal.querySelector('.admin-modal-header h3');
+            if (headerEl) headerEl.textContent = `Edit ${getPageTitle(page).replace(/s$/, '')}`;
+        }
 
-    // Populate categories for forms and select the current one
-    if (page === 'forms') {
-        loadFormCategories(result.category);
-    }
+        openModal(modalId);
 
-    // Populate job types and select current
-    if (page === 'jobs') {
-        loadJobTypes(result.job_type);
+        // Populate categories for forms and select the current one
+        if (page === 'forms') {
+            loadFormCategories(result.category);
+        }
+
+        // Populate card types for notices and select current
+        if (page === 'notices') {
+            loadNoticeCardTypes(result.card_type);
+        }
+
+        // Populate job types and select current
+        if (page === 'jobs') {
+            loadJobTypes(result.job_type);
+        }
+    } catch (e) {
+        console.error('editRecordGeneric Error:', e);
+        showToast('UI Error: ' + e.message, 'error');
     }
 }
 
@@ -879,7 +929,7 @@ async function loadJobTypes(selectedValue = '') {
     html += `<option value="__NEW__">+ Add New Type...</option>`;
 
     select.innerHTML = html;
-    
+
     // Hide/show new input
     const group = document.getElementById('jobs-new-type-group');
     if (group) group.style.display = (selectedValue && !finalTypes.includes(selectedValue)) ? 'block' : 'none';
@@ -912,8 +962,8 @@ async function saveRecord(page, form) {
 
     const formData = new FormData(form);
     const data = {};
-    formData.forEach((value, key) => { 
-        if (key !== 'category_select' && key !== 'job_type_select') data[key] = value; 
+    formData.forEach((value, key) => {
+        if (key !== 'category_select' && key !== 'job_type_select') data[key] = value;
     });
 
     // Special handling for jobs type dropdown
@@ -924,7 +974,7 @@ async function saveRecord(page, form) {
             const val = newInput.value.trim();
             if (!val) {
                 showToast('Please enter a job type name', 'warning');
-                if (submitBtn) { 
+                if (submitBtn) {
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Save';
                 }
@@ -936,6 +986,27 @@ async function saveRecord(page, form) {
         }
     }
 
+    // Special handling for notices card_type dropdown
+    if (page === 'notices') {
+        const select = document.getElementById('notices-card-type-select');
+        const newInput = document.getElementById('notices-new-type-input');
+        if (select && select.value === '__NEW__') {
+            const val = newInput.value.trim().toLowerCase().replace(/[^a-z0-9_]/g, '_');
+            if (!val) {
+                showToast('Please enter a card type name', 'warning');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i data-lucide="save"></i>Save';
+                    if (window.lucide) lucide.createIcons();
+                }
+                return;
+            }
+            data.card_type = val;
+        } else if (select) {
+            data.card_type = select.value;
+        }
+    }
+
     // Special handling for forms category dropdown
     if (page === 'forms') {
         const select = document.getElementById('forms-category-select');
@@ -944,10 +1015,10 @@ async function saveRecord(page, form) {
             const val = newInput.value.trim();
             if (!val) {
                 showToast('Please enter a category name', 'warning');
-                if (submitBtn) { 
-                    submitBtn.disabled = false; 
-                    submitBtn.innerHTML = '<i data-lucide="save"></i>Save'; 
-                    if (window.lucide) lucide.createIcons(); 
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i data-lucide="save"></i>Save';
+                    if (window.lucide) lucide.createIcons();
                 }
                 return;
             }
@@ -958,17 +1029,17 @@ async function saveRecord(page, form) {
     }
 
     // CRITICAL FIX: Explicitly check for file paths in the form to ensure they aren't missed
-    const pathFields = ['pdf_path', 'thumbnail_path', 'textbook_pdf', 'manual_pdf', 'image_path', 'cover_image'];
+    const pathFields = ['pdf_path', 'thumbnail_path', 'textbook_pdf', 'manual_pdf', 'image_path', 'cover_image', 'file_path'];
     pathFields.forEach(f => {
         const input = form.querySelector(`input[name="${f}"]`);
         if (input && input.value) {
             let path = input.value;
-            
+
             // Transform for forms if needed (uploads/forms/file.pdf -> ffile.pdf)
             if (page === 'forms' && path.startsWith('uploads/forms/')) {
                 path = path.replace(/^uploads\/forms\//, 'f');
             }
-            
+
             // Transform for publications & textbooks (uploads/X/file.pdf -> file.pdf)
             if ((page === 'publications' || page === 'textbooks') && path.includes(`uploads/${page}/`)) {
                 path = path.split('/').pop(); // Just the filename
@@ -995,6 +1066,7 @@ async function saveRecord(page, form) {
         if (!data.label || !data.text) isValid = false;
     } else if (page === 'faq') {
         if (!data.question) isValid = false;
+
     } else {
         if (!data.title) {
             isValid = false;
@@ -1082,6 +1154,16 @@ function openAddModal(page) {
         // Special handling for jobs type dropdown
         if (page === 'jobs') {
             loadJobTypes();
+        }
+
+        // Populate card types for notices
+        if (page === 'notices') {
+            loadNoticeCardTypes();
+        }
+
+        // GTFS extra fields
+        if (page === 'gtfs') {
+            toggleGtfsFields('');
         }
     }
 
@@ -1186,23 +1268,26 @@ function clearModalUpload(modal, field) {
 function showExistingFilePreview(modal, field, filePath, type) {
     const previewEl = document.getElementById(`preview-${modal}-${field}`);
     if (!previewEl || !filePath) return;
-    const filename = filePath.split('/').pop();
+    
+    let finalPath = filePath;
+    
+    const filename = finalPath.split('/').pop();
     if (type === 'image') {
         previewEl.innerHTML = `
             <div class="upload-preview-item">
-                <img src="../${filePath}" class="upload-img-preview" alt="Current" onerror="this.style.display='none'">
+                <img src="../${finalPath}" class="upload-img-preview" alt="Current" onerror="this.style.display='none'">
                 <div class="upload-preview-info">
                     <span class="upload-preview-name">📌 Current: ${filename}</span>
                     <button type="button" class="remove-upload" onclick="clearModalUpload('${modal}','${field}')">✕ Remove</button>
                 </div>
             </div>`;
     } else {
-        const isImg = filePath.match(/\.(jpg|jpeg|png|webp|gif)$/i);
+        const isImg = finalPath.match(/\.(jpg|jpeg|png|webp|gif)$/i);
         previewEl.innerHTML = `
             <div class="upload-file-preview">
-                ${isImg ? `<img src="../${filePath}" style="width:30px;height:30px;object-fit:cover;border-radius:4px;margin-right:8px;">` : '<span>📄</span>'}
+                ${isImg ? `<img src="../${finalPath}" style="width:30px;height:30px;object-fit:cover;border-radius:4px;margin-right:8px;">` : '<span>📄</span>'}
                 <span style="flex:1;">Current: ${filename}</span>
-                <a href="../${filePath}" target="_blank" style="color:var(--admin-primary);font-size:0.8rem;text-decoration:none;margin-right:8px;">Preview</a>
+                <a href="../${finalPath}" target="_blank" style="color:var(--admin-primary);font-size:0.8rem;text-decoration:none;margin-right:8px;">Preview</a>
                 <button type="button" class="remove-upload" onclick="clearModalUpload('${modal}','${field}')">✕</button>
             </div>`;
     }
@@ -1216,15 +1301,15 @@ async function loadLeaders() {
     result.data.forEach(leader => {
         const prefix = leader.role; // 'minister' or 'secretary'
 
-        const nameEl  = document.getElementById(`leader-${prefix}-name`);
+        const nameEl = document.getElementById(`leader-${prefix}-name`);
         const titleEl = document.getElementById(`leader-${prefix}-title`);
         const photoEl = document.getElementById(`leader-${prefix}-photo`);
-        const msgEl   = document.getElementById(`leaders-message_content_${prefix}`);
+        const msgEl = document.getElementById(`leaders-message_content_${prefix}`);
 
-        if (nameEl)  nameEl.value  = leader.name           || '';
+        if (nameEl) nameEl.value = leader.name || '';
         if (titleEl) titleEl.value = leader.position_title || '';
-        if (photoEl) photoEl.value = leader.photo_path     || `assets/images/leaders/${prefix}.png`;
-        if (msgEl)   msgEl.value   = leader.message_content || '';
+        if (photoEl) photoEl.value = leader.photo_path || `assets/images/leaders/${prefix}.png`;
+        if (msgEl) msgEl.value = leader.message_content || '';
 
         // Show current photo preview
         const previewEl = document.getElementById(`leader-${prefix}-photo-preview`);
@@ -1261,8 +1346,8 @@ async function saveLeader(role) {
 
     const result = await apiPost('leaders.php?action=update', data);
 
-    if (btn) { 
-        btn.disabled = false; 
+    if (btn) {
+        btn.disabled = false;
         btn.innerHTML = `<i data-lucide="save"></i>Save ${role === 'minister' ? "Minister's" : "Secretary's"} Message`;
         if (window.lucide) lucide.createIcons();
     }
@@ -1289,15 +1374,15 @@ async function clearLeader(role) {
         // Reset the form fields
         const prefixes = { minister: 'minister', secretary: 'secretary' };
         const prefix = prefixes[role];
-        const nameEl  = document.getElementById(`leader-${prefix}-name`);
+        const nameEl = document.getElementById(`leader-${prefix}-name`);
         const titleEl = document.getElementById(`leader-${prefix}-title`);
         const photoEl = document.getElementById(`leader-${prefix}-photo`);
-        const msgEl   = document.getElementById(`leaders-message_content_${prefix}`);
+        const msgEl = document.getElementById(`leaders-message_content_${prefix}`);
         const previewEl = document.getElementById(`leader-${prefix}-photo-preview`);
-        if (nameEl)    nameEl.value  = '';
-        if (titleEl)   titleEl.value = '';
-        if (photoEl)   photoEl.value = '';
-        if (msgEl)     msgEl.value   = '';
+        if (nameEl) nameEl.value = '';
+        if (titleEl) titleEl.value = '';
+        if (photoEl) photoEl.value = '';
+        if (msgEl) msgEl.value = '';
         if (previewEl) previewEl.innerHTML = '';
     } else {
         showToast(result.error || 'Clear failed', 'error');
@@ -1397,7 +1482,7 @@ async function loadSettings() {
                         if (window.lucide) lucide.createIcons();
                     }
                 }
-                
+
                 // Sync UI elements
                 if (s.setting_key === 'site_logo') {
                     const sidebarLogo = document.getElementById('admin-sidebar-logo');
@@ -1454,9 +1539,9 @@ async function toggleMaintenance(enabled) {
 async function handleSettingUpload(input, key) {
     if (!input.files || !input.files[0]) return;
     const file = input.files[0];
-    
+
     console.log(`[Branding] Starting upload for ${key}:`, file.name);
-    
+
     // Show spinner in zone
     const zoneEl = document.getElementById(`zone-setting-${key}`);
     const originalZoneHTML = zoneEl ? zoneEl.innerHTML : '';
@@ -1467,7 +1552,7 @@ async function handleSettingUpload(input, key) {
     try {
         const result = await uploadFile(file, 'image');
         console.log(`[Branding] Upload result for ${key}:`, result);
-        
+
         // Restore zone
         if (zoneEl) zoneEl.innerHTML = originalZoneHTML;
 
@@ -1477,7 +1562,7 @@ async function handleSettingUpload(input, key) {
                 hiddenInput.value = result.file_path;
                 console.log(`[Branding] Updated hidden input setting-${key} to ${result.file_path}`);
             }
-            
+
             const preview = document.getElementById(`preview-setting-${key}`);
             if (preview) {
                 preview.innerHTML = `<img src="../${result.file_path}" style="width:100%; height:100%; object-fit:contain;">`;
@@ -1515,8 +1600,8 @@ async function saveSettings() {
 
     const result = await apiPost('settings.php?action=update', { settings });
 
-    if (btn) { 
-        btn.disabled = false; 
+    if (btn) {
+        btn.disabled = false;
         btn.innerHTML = '<i data-lucide="save"></i>Save All Settings';
         if (window.lucide) lucide.createIcons();
     }
@@ -1718,7 +1803,7 @@ async function checkSession() {
             userRole = res.role || 'editor';
             console.log(`[RBAC] Logged in as: ${userRole}`); // Debug to console
             document.body.setAttribute('data-user-role', userRole);
-            
+
             // Apply restrictions immediately
             applyRoleRestrictions();
         } else {
@@ -1732,7 +1817,7 @@ async function checkSession() {
 function applyRoleRestrictions() {
     if (userRole !== 'super_admin') {
         const restrictedPages = ['settings', 'users', 'logs'];
-        
+
         // 1. Hide sidebar items
         restrictedPages.forEach(p => {
             const navItem = document.querySelector(`.nav-item[data-page="${p}"]`);
@@ -1782,7 +1867,7 @@ async function managePhotos(albumId) {
 
     // Reset progress UI
     document.getElementById('upload-progress-container').style.display = 'none';
-    
+
     await refreshAlbumPhotos(albumId);
     openModal('modal-album-photos');
 }
@@ -1825,7 +1910,7 @@ async function refreshAlbumPhotos(albumId) {
             </div>
         </div>
     `).join('');
-    
+
     if (window.lucide) {
         lucide.createIcons({
             attrs: { 'stroke-width': 2.5, 'class': 'lucide' }
@@ -1835,7 +1920,7 @@ async function refreshAlbumPhotos(albumId) {
 
 async function handleAlbumMultiUpload(files) {
     if (!files || !files.length) return;
-    
+
     const modal = document.getElementById('modal-album-photos');
     const albumId = modal.dataset.albumId;
     if (!albumId) return;
@@ -1847,14 +1932,14 @@ async function handleAlbumMultiUpload(files) {
 
     container.style.display = 'block';
     container.style.animation = 'fadeIn 0.3s ease';
-    
+
     const total = files.length;
     let successCount = 0;
     let failCount = 0;
 
     for (let i = 0; i < total; i++) {
         const file = files[i];
-        
+
         // Skip if file is too large (10MB)
         if (file.size > 10 * 1024 * 1024) {
             failCount++;
@@ -1862,7 +1947,7 @@ async function handleAlbumMultiUpload(files) {
         }
 
         const percent = Math.round(((i) / total) * 100);
-        
+
         text.textContent = `Uploading ${i + 1} of ${total}: ${file.name.substring(0, 20)}${file.name.length > 20 ? '...' : ''}`;
         percentText.textContent = `${percent}%`;
         bar.style.width = `${percent}%`;
@@ -1893,7 +1978,7 @@ async function handleAlbumMultiUpload(files) {
 
     bar.style.width = '100%';
     percentText.textContent = '100%';
-    
+
     if (successCount === total) {
         text.textContent = `Success! All ${total} photos uploaded ✓`;
         text.style.color = 'var(--admin-success)';
@@ -1938,17 +2023,17 @@ async function loadEdubotTable() {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--admin-muted);">Loading knowledge base...</td></tr>';
 
     const result = await apiGet('chatbot-knowledge.php?action=list');
-    const data   = result.data || [];
+    const data = result.data || [];
 
     // Update stats
-    const total  = data.length;
+    const total = data.length;
     const active = data.filter(r => r.status === 'active').length;
-    const words  = data.reduce((sum, r) => sum + (parseInt(r.word_count) || 0), 0);
+    const words = data.reduce((sum, r) => sum + (parseInt(r.word_count) || 0), 0);
 
     const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val.toLocaleString(); };
-    setEl('kb-stat-total',  total);
+    setEl('kb-stat-total', total);
     setEl('kb-stat-active', active);
-    setEl('kb-stat-words',  words);
+    setEl('kb-stat-words', words);
 
     if (data.length === 0) {
         tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:3rem;color:var(--admin-muted);">
@@ -1963,8 +2048,8 @@ async function loadEdubotTable() {
     const typeBadge = t => `<span style="background:rgba(99,102,241,0.1);color:#6366f1;padding:2px 8px;border-radius:20px;font-size:0.75rem;font-weight:600;">${typeIcon[t] || '📝'} ${t}</span>`;
 
     tbody.innerHTML = data.map(row => {
-        const date    = new Date(row.created_at).toLocaleDateString('en-PG', { day: 'numeric', month: 'short', year: '2-digit' });
-        const srcRef  = row.source_ref
+        const date = new Date(row.created_at).toLocaleDateString('en-PG', { day: 'numeric', month: 'short', year: '2-digit' });
+        const srcRef = row.source_ref
             ? `<a href="${row.source_ref}" target="_blank" class="table-link" title="${row.source_ref}" style="max-width:180px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${row.source_ref.replace(/^https?:\/\//, '').substring(0, 35)}…</a>`
             : '<span style="color:var(--admin-muted);">—</span>';
         const isActive = row.status === 'active';
@@ -1976,7 +2061,7 @@ async function loadEdubotTable() {
             <td style="font-weight:600;max-width:200px;">${row.title}</td>
             <td>${typeBadge(row.source_type)}</td>
             <td>${srcRef}</td>
-            <td style="color:var(--admin-muted);font-size:0.85rem;">${(parseInt(row.word_count)||0).toLocaleString()}</td>
+            <td style="color:var(--admin-muted);font-size:0.85rem;">${(parseInt(row.word_count) || 0).toLocaleString()}</td>
             <td>${statusBadge}</td>
             <td style="color:var(--admin-muted);font-size:0.85rem;white-space:nowrap;">${date}</td>
             <td>
@@ -1987,7 +2072,7 @@ async function loadEdubotTable() {
                     <button class="btn btn-sm btn-outline" onclick="toggleEdubotEntry(${row.id})" title="${isActive ? 'Deactivate' : 'Activate'}" style="color:${isActive ? '#f59e0b' : '#10b981'};">
                         <i data-lucide="${isActive ? 'pause-circle' : 'play-circle'}"></i>
                     </button>
-                    <button class="btn btn-sm btn-outline" onclick="deleteEdubotEntry(${row.id}, '${row.title.replace(/'/g,"\\'")}')'" title="Delete" style="color:var(--admin-danger);">
+                    <button class="btn btn-sm btn-outline" onclick="deleteEdubotEntry(${row.id}, '${row.title.replace(/'/g, "\\'")}')" title="Delete" style="color:var(--admin-danger);">
                         <i data-lucide="trash-2"></i>
                     </button>
                 </div>
@@ -1999,12 +2084,12 @@ async function loadEdubotTable() {
 }
 
 function openAddEdubotModal() {
-    document.getElementById('kb-id').value      = '';
-    document.getElementById('kb-title').value   = '';
+    document.getElementById('kb-id').value = '';
+    document.getElementById('kb-title').value = '';
     document.getElementById('kb-content').value = '';
-    document.getElementById('kb-url').value     = '';
+    document.getElementById('kb-url').value = '';
     document.getElementById('kb-source-type').value = 'text';
-    document.getElementById('kb-status').value  = 'active';
+    document.getElementById('kb-status').value = 'active';
     document.getElementById('edubot-modal-title').textContent = '🧠 Add Knowledge Entry';
     handleKbSourceTypeChange('text');
     updateKbWordCount();
@@ -2015,12 +2100,12 @@ async function editEdubotEntry(id) {
     const result = await apiGet(`chatbot-knowledge.php?action=get&id=${id}`);
     if (result.error) { showToast(result.error, 'error'); return; }
 
-    document.getElementById('kb-id').value           = result.id;
-    document.getElementById('kb-title').value        = result.title;
-    document.getElementById('kb-content').value      = result.content;
-    document.getElementById('kb-url').value          = result.source_ref || '';
-    document.getElementById('kb-source-type').value  = result.source_type || 'text';
-    document.getElementById('kb-status').value       = result.status;
+    document.getElementById('kb-id').value = result.id;
+    document.getElementById('kb-title').value = result.title;
+    document.getElementById('kb-content').value = result.content;
+    document.getElementById('kb-url').value = result.source_ref || '';
+    document.getElementById('kb-source-type').value = result.source_type || 'text';
+    document.getElementById('kb-status').value = result.status;
     document.getElementById('edubot-modal-title').textContent = '✏️ Edit Knowledge Entry';
     handleKbSourceTypeChange(result.source_type || 'text');
     updateKbWordCount();
@@ -2028,12 +2113,12 @@ async function editEdubotEntry(id) {
 }
 
 async function saveEdubotEntry() {
-    const id      = document.getElementById('kb-id').value;
-    const title   = document.getElementById('kb-title').value.trim();
+    const id = document.getElementById('kb-id').value;
+    const title = document.getElementById('kb-title').value.trim();
     const content = document.getElementById('kb-content').value.trim();
     const srcType = document.getElementById('kb-source-type').value;
-    const srcRef  = document.getElementById('kb-url').value.trim();
-    const status  = document.getElementById('kb-status').value;
+    const srcRef = document.getElementById('kb-url').value.trim();
+    const status = document.getElementById('kb-status').value;
 
     if (!title) { showToast('Title is required', 'error'); return; }
 
@@ -2041,9 +2126,9 @@ async function saveEdubotEntry() {
     btn.disabled = true;
     btn.innerHTML = '<i class="loading-dot"></i> Saving...';
 
-    const action  = id ? 'update' : 'create';
+    const action = id ? 'update' : 'create';
     const payload = { id, title, source_type: srcType, source_ref: srcRef, content, status };
-    const result  = await apiPost(`chatbot-knowledge.php?action=${action}`, payload);
+    const result = await apiPost(`chatbot-knowledge.php?action=${action}`, payload);
 
     btn.disabled = false;
     btn.innerHTML = '<i data-lucide="save"></i> Save Entry';
@@ -2101,7 +2186,7 @@ async function scrapeKbUrl() {
         // Auto-set title from URL hostname if blank
         const titleEl = document.getElementById('kb-title');
         if (!titleEl.value) {
-            try { titleEl.value = 'Content from ' + new URL(url).hostname; } catch(e) {}
+            try { titleEl.value = 'Content from ' + new URL(url).hostname; } catch (e) { }
         }
     } else {
         showToast(result.error || 'Could not scrape URL', 'error');
@@ -2110,7 +2195,7 @@ async function scrapeKbUrl() {
 
 // File text extraction (client-side for TXT/CSV; server fallback for PDF)
 async function extractKbFile(input) {
-    const file   = input.files[0];
+    const file = input.files[0];
     const status = document.getElementById('kb-file-status');
     if (!file) return;
 
@@ -2128,7 +2213,7 @@ async function extractKbFile(input) {
     } else if (ext === 'csv') {
         const text = await file.text();
         // Convert CSV rows to readable lines
-        const lines  = text.split('\n').slice(0, 500);
+        const lines = text.split('\n').slice(0, 500);
         const pretty = lines.map(l => l.replace(/,/g, ' | ')).join('\n');
         document.getElementById('kb-content').value = pretty.substring(0, 20000);
         updateKbWordCount();
@@ -2144,7 +2229,7 @@ async function extractKbFile(input) {
             const formData = new FormData();
             formData.append('file', file);
 
-            const r   = await fetch(`${API_BASE}/pdf-extract.php`, {
+            const r = await fetch(`${API_BASE}/pdf-extract.php`, {
                 method: 'POST',
                 body: formData,
                 credentials: 'same-origin'
@@ -2166,7 +2251,7 @@ async function extractKbFile(input) {
                 const uploadForm = new FormData();
                 uploadForm.append('file', file);
                 uploadForm.append('type', 'knowledge');
-                const up    = await fetch(`${API_BASE}/upload.php`, { method: 'POST', body: uploadForm, credentials: 'same-origin' });
+                const up = await fetch(`${API_BASE}/upload.php`, { method: 'POST', body: uploadForm, credentials: 'same-origin' });
                 const upRes = await up.json();
                 if (upRes.path) document.getElementById('kb-url').value = upRes.path;
 
@@ -2187,14 +2272,14 @@ async function extractKbFile(input) {
 }
 
 function handleKbSourceTypeChange(type) {
-    document.getElementById('kb-url-panel').style.display  = type === 'url'  ? 'block' : 'none';
+    document.getElementById('kb-url-panel').style.display = type === 'url' ? 'block' : 'none';
     document.getElementById('kb-file-panel').style.display = type === 'file' ? 'block' : 'none';
 }
 
 function updateKbWordCount() {
-    const text  = document.getElementById('kb-content').value;
+    const text = document.getElementById('kb-content').value;
     const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-    const el    = document.getElementById('kb-word-counter');
+    const el = document.getElementById('kb-word-counter');
     if (el) el.textContent = words.toLocaleString() + ' words';
 }
 
@@ -2217,7 +2302,7 @@ async function loadFormCategories(selectedVal = '') {
     const select = document.getElementById('forms-category-select');
     const wrap = document.getElementById('forms-new-category-wrap');
     const input = document.getElementById('forms-new-category-input');
-    
+
     if (!select) return;
 
     // Reset UI
@@ -2229,19 +2314,19 @@ async function loadFormCategories(selectedVal = '') {
         // Keep the first "Select" and last "Add New"
         const firstOpt = select.options[0];
         const lastOpt = select.options[select.options.length - 1];
-        
+
         select.innerHTML = '';
         select.appendChild(firstOpt);
-        
+
         res.data.forEach(cat => {
             const opt = document.createElement('option');
             opt.value = cat;
             opt.textContent = cat;
             select.appendChild(opt);
         });
-        
+
         select.appendChild(lastOpt);
-        
+
         if (selectedVal) {
             select.value = selectedVal;
             // If it wasn't in the list (rare but possible), show as NEW?
@@ -2258,3 +2343,429 @@ async function loadFormCategories(selectedVal = '') {
         refreshCustomSelect(select);
     }
 }
+
+// =============================================
+// ===== CURRICULUM MATERIALS MODULE =====
+// =============================================
+
+let currentCurriculumTab = 'elementary';
+
+// Register curriculum in page title map
+if (typeof getPageTitle === 'function') {
+    const _orig = getPageTitle;
+    window.getPageTitle = function (page) {
+        if (page === 'curriculum') return 'Curriculum Materials';
+        return _orig(page);
+    };
+}
+
+// Hook into loadPageData
+const _origLoadPage = loadPageData;
+window.loadPageData = async function (page) {
+    if (page === 'curriculum') {
+        loadCurriculumTable(currentCurriculumTab);
+        return;
+    }
+    if (page === 'users') {
+        loadUsersTable();
+        return;
+    }
+    return _origLoadPage(page);
+};
+
+function switchCurriculumTab(level) {
+    currentCurriculumTab = level;
+    ['elementary', 'primary', 'secondary'].forEach(l => {
+        const btn = document.getElementById(`ctab-${l}`);
+        if (!btn) return;
+        btn.className = l === level ? 'btn btn-primary' : 'btn btn-outline';
+        btn.style.borderRadius = '8px 8px 0 0';
+        btn.style.fontSize = '0.85rem';
+    });
+    loadCurriculumTable(level);
+}
+
+async function loadCurriculumTable(level) {
+    const tbody = document.getElementById('curriculum-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:3rem;color:var(--admin-muted);">Loading ${level} curriculum...</td></tr>`;
+
+    const result = await apiGet(`curriculum.php?action=list&level=${level}`);
+    if (!result.data || result.data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:3rem;color:var(--admin-muted);">
+            <div style="font-size:2rem;margin-bottom:0.5rem;">📂</div>
+            No ${level} curriculum entries yet. Click <strong>Add Entry</strong> to upload PDFs.
+        </td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = result.data.map(row => {
+        const syllabusLink = row.syllabus_url
+            ? `<a href="../${row.syllabus_url}" target="_blank" class="btn btn-sm btn-outline" style="font-size:0.78rem;"><i data-lucide="file-text"></i> View PDF</a>`
+            : `<span style="color:var(--admin-muted);font-size:0.8rem;">—</span>`;
+        const guideLink = row.teachers_guide_url
+            ? `<a href="../${row.teachers_guide_url}" target="_blank" class="btn btn-sm btn-outline" style="font-size:0.78rem;"><i data-lucide="file-text"></i> View PDF</a>`
+            : `<span style="color:var(--admin-muted);font-size:0.8rem;">—</span>`;
+        const updated = row.updated_at
+            ? new Date(row.updated_at).toLocaleDateString('en-PG', { day: 'numeric', month: 'short', year: 'numeric' })
+            : '—';
+        return `
+        <tr data-id="${row.id}">
+            <td style="font-weight:600;">${row.grade}</td>
+            <td>${row.subject}</td>
+            <td>${syllabusLink}</td>
+            <td>${guideLink}</td>
+            <td style="font-size:0.82rem;color:var(--admin-muted);">${row.uploaded_by || '—'}</td>
+            <td style="font-size:0.82rem;color:var(--admin-muted);">${updated}</td>
+            <td class="actions">
+                <div class="actions-wrapper">
+                    <button class="btn btn-sm btn-outline" onclick="editCurriculumEntry(${row.id})"><i data-lucide="edit-3"></i> Edit</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteCurriculumEntry(${row.id})"><i data-lucide="trash-2"></i></button>
+                </div>
+            </td>
+        </tr>`;
+    }).join('');
+
+    if (window.lucide) lucide.createIcons({ attrs: { 'stroke-width': 2, 'class': 'lucide' } });
+}
+
+function openCurriculumModal(data = null) {
+    const isEdit = !!data;
+    document.getElementById('curriculum-modal-title').innerHTML = isEdit
+        ? '<i data-lucide="edit-3"></i> Edit Curriculum Entry'
+        : '<i data-lucide="library"></i> Add Curriculum Entry';
+    document.getElementById('curriculum-id').value = isEdit ? data.id : '';
+    document.getElementById('curriculum-level').value = isEdit ? data.level : currentCurriculumTab;
+    document.getElementById('curriculum-grade').value = isEdit ? data.grade : '';
+    document.getElementById('curriculum-subject').value = isEdit ? data.subject : '';
+    document.getElementById('curriculum-syllabus_url').value = isEdit ? (data.syllabus_url || '') : '';
+    document.getElementById('curriculum-teachers_guide_url').value = isEdit ? (data.teachers_guide_url || '') : '';
+
+    // Show existing PDF previews
+    ['syllabus', 'guide'].forEach(type => {
+        const key = type === 'syllabus' ? 'syllabus_url' : 'teachers_guide_url';
+        const preview = document.getElementById(`preview-curriculum-${type}`);
+        if (preview) {
+            const val = isEdit ? (data[key] || '') : '';
+            if (val) {
+                const fname = val.split('/').pop();
+                preview.innerHTML = `<div class="upload-preview-box" style="margin-top:0.5rem;padding:0.5rem 0.75rem;background:rgba(59,165,224,0.07);border-radius:6px;font-size:0.82rem;"><i data-lucide="file-text"></i> ${fname} <a href="../${val}" target="_blank" style="margin-left:0.5rem;color:var(--admin-primary);">View</a></div>`;
+            } else {
+                preview.innerHTML = '';
+            }
+        }
+    });
+
+    openModal('modal-curriculum');
+    if (window.lucide) lucide.createIcons();
+}
+
+async function editCurriculumEntry(id) {
+    const result = await apiGet(`curriculum.php?action=list`);
+    if (!result.data) return;
+    const item = result.data.find(r => r.id == id);
+    if (item) openCurriculumModal(item);
+}
+
+async function deleteCurriculumEntry(id) {
+    const confirmed = await showConfirmDialog('Delete Entry', 'Permanently delete this curriculum entry? Any uploaded PDFs on the server will remain but will no longer be linked.');
+    if (!confirmed) return;
+    const result = await apiPost('curriculum.php?action=delete', { id });
+    if (result.success) {
+        showToast('Entry deleted ✓');
+        loadCurriculumTable(currentCurriculumTab);
+    } else {
+        showToast(result.error || 'Delete failed', 'error');
+    }
+}
+
+async function handleCurriculumUpload(file, field) {
+    if (!file) return;
+    const previewId = field === 'syllabus_url' ? 'preview-curriculum-syllabus' : 'preview-curriculum-guide';
+    const inputId = `curriculum-${field}`;
+    const preview = document.getElementById(previewId);
+    if (preview) preview.innerHTML = `<div style="padding:0.5rem;color:var(--admin-muted);font-size:0.82rem;"><span style="display:inline-block;width:14px;height:14px;border:2px solid var(--admin-primary);border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></span> Uploading…</div>`;
+
+    const result = await uploadFile(file, 'document');
+    if (result.success) {
+        document.getElementById(inputId).value = result.file_path;
+        const fname = result.file_name || result.file_path.split('/').pop();
+        if (preview) preview.innerHTML = `<div style="margin-top:0.5rem;padding:0.5rem 0.75rem;background:rgba(59,165,224,0.07);border-radius:6px;font-size:0.82rem;color:var(--admin-muted);">✓ <strong>${fname}</strong></div>`;
+        showToast('PDF uploaded ✓');
+    } else {
+        if (preview) preview.innerHTML = `<p style="color:var(--admin-danger);font-size:0.8rem;">Upload failed</p>`;
+        showToast(result.error || 'Upload failed', 'error');
+    }
+}
+
+async function saveCurriculumEntry() {
+    const id = document.getElementById('curriculum-id').value;
+    const data = {
+        level: document.getElementById('curriculum-level').value,
+        grade: document.getElementById('curriculum-grade').value.trim(),
+        subject: document.getElementById('curriculum-subject').value.trim(),
+        syllabus_url: document.getElementById('curriculum-syllabus_url').value,
+        teachers_guide_url: document.getElementById('curriculum-teachers_guide_url').value
+    };
+
+    if (!data.level || !data.grade || !data.subject) {
+        showToast('Level, Grade, and Subject are required', 'error');
+        return;
+    }
+
+    const action = id ? 'update' : 'create';
+    if (id) data.id = id;
+
+    const result = await apiPost(`curriculum.php?action=${action}`, data);
+    if (result.success) {
+        showToast(id ? 'Entry updated ✓' : 'Entry created ✓');
+        closeModal('modal-curriculum');
+        loadCurriculumTable(data.level);
+    } else {
+        showToast(result.error || 'Save failed', 'error');
+    }
+}
+
+// =============================================
+// ===== USERS MODULE (with Designation/Role) =====
+// =============================================
+
+async function loadUsersTable() {
+    const tbody = document.getElementById('users-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;"><span style="display:inline-block;width:20px;height:20px;border:2px solid var(--admin-primary);border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></span> Loading...</td></tr>`;
+
+    const result = await apiGet('users.php?action=list');
+    if (!result.data || result.data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:3rem;color:var(--admin-muted);">No admin users found.</td></tr>`;
+        return;
+    }
+
+    const roleBadge = (role) => {
+        const map = {
+            super_admin: { label: 'Super Admin', color: '#ef4444' },
+            curriculum_admin: { label: 'Curriculum Admin', color: '#3b82f6' },
+            editor: { label: 'Editor', color: '#6b7280' }
+        };
+        const r = map[role] || { label: role, color: '#6b7280' };
+        return `<span style="display:inline-block;padding:0.2rem 0.6rem;border-radius:20px;font-size:0.75rem;font-weight:600;background:${r.color}22;color:${r.color};border:1px solid ${r.color}44;">${r.label}</span>`;
+    };
+
+    tbody.innerHTML = result.data.map(user => {
+        const lastLogin = user.last_login
+            ? new Date(user.last_login).toLocaleDateString('en-PG', { day: 'numeric', month: 'short', year: 'numeric' })
+            : 'Never';
+        return `
+        <tr>
+            <td style="font-weight:600;">${user.username}</td>
+            <td>${user.full_name || '—'}</td>
+            <td style="font-size:0.82rem;color:var(--admin-muted);">${user.designation || '—'}</td>
+            <td>${roleBadge(user.role)}</td>
+            <td style="font-size:0.82rem;">${user.email || '—'}</td>
+            <td style="font-size:0.82rem;color:var(--admin-muted);">${lastLogin}</td>
+            <td class="actions">
+                <div class="actions-wrapper">
+                    <button class="btn btn-sm btn-outline" onclick="editUser(${user.id})"><i data-lucide="edit-3"></i> Edit</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id})"><i data-lucide="trash-2"></i></button>
+                </div>
+            </td>
+        </tr>`;
+    }).join('');
+
+    if (window.lucide) lucide.createIcons({ attrs: { 'stroke-width': 2, 'class': 'lucide' } });
+}
+
+function openUserModal(data = null) {
+    const isEdit = !!data;
+    const title = document.getElementById('users-modal-title');
+    if (title) title.innerHTML = isEdit ? '<i data-lucide="user-check"></i> Edit Admin User' : '<i data-lucide="user-plus"></i> Add Admin User';
+    document.getElementById('user-id').value = isEdit ? data.id : '';
+    document.getElementById('user-username').value = isEdit ? data.username : '';
+    document.getElementById('user-password').value = '';
+    document.getElementById('user-fullname').value = isEdit ? (data.full_name || '') : '';
+    document.getElementById('user-designation').value = isEdit ? (data.designation || '') : '';
+    document.getElementById('user-email').value = isEdit ? (data.email || '') : '';
+    const roleSelect = document.getElementById('user-role');
+    const roleVal = isEdit ? (data.role || '') : '';
+    roleSelect.value = roleVal;
+    toggleDesignationHint(roleVal);
+    // Refresh the custom-select UI to reflect the new value
+    const roleContainer = roleSelect.closest('.custom-select-container');
+    if (roleContainer) {
+        const trigger = roleContainer.querySelector('.custom-select-trigger');
+        if (trigger) {
+            const selOpt = roleSelect.options[roleSelect.selectedIndex];
+            const isBlank = !selOpt || selOpt.disabled || selOpt.value === '';
+            trigger.textContent = selOpt ? selOpt.textContent : '— Select a role —';
+            trigger.style.color = isBlank ? 'var(--admin-muted, #9ca3af)' : '';
+            roleContainer.querySelectorAll('.custom-option').forEach(o => {
+                o.classList.toggle('selected', o.textContent === (selOpt ? selOpt.textContent : ''));
+            });
+        }
+    }
+    toggleDesignationHint(document.getElementById('user-role').value);
+    const pwHint = document.getElementById('user-pw-hint');
+    if (pwHint) pwHint.textContent = isEdit ? '(leave blank to keep current)' : '(required for new users)';
+    openModal('modal-users');
+    if (window.lucide) lucide.createIcons();
+}
+
+function toggleDesignationHint(role) {
+    const hint = document.getElementById('designation-hint');
+    if (!hint) return;
+    if (!role) {
+        hint.style.display = 'none';
+        return;
+    }
+    const messages = {
+        super_admin: '<strong style="color:var(--admin-text);">Super Admin</strong> has unrestricted access to all modules including user management, settings, and logs.',
+        curriculum_admin: '<strong style="color:var(--admin-text);">Curriculum Admin</strong> can only access Curriculum Materials and Textbooks. All their actions are recorded in Activity Logs.',
+        editor: '<strong style="color:var(--admin-text);">Editor</strong> can manage general content (news, events, publications) but cannot access system settings, users, or curriculum PDFs.'
+    };
+    hint.querySelector('div').innerHTML = messages[role] || '';
+    hint.style.display = messages[role] ? 'block' : 'none';
+}
+
+async function editUser(id) {
+    const result = await apiGet(`users.php?action=get&id=${id}`);
+    if (result.error) { showToast(result.error, 'error'); return; }
+    openUserModal(result);
+}
+
+async function deleteUser(id) {
+    const confirmed = await showConfirmDialog('Delete User', 'Are you sure you want to permanently delete this admin account?');
+    if (!confirmed) return;
+    const result = await apiPost('users.php?action=delete', { id });
+    if (result.success) {
+        showToast('User deleted ✓');
+        loadUsersTable();
+    } else {
+        showToast(result.error || 'Delete failed', 'error');
+    }
+}
+
+async function saveUserRecord() {
+    const id = document.getElementById('user-id').value;
+    const data = {
+        username: document.getElementById('user-username').value.trim(),
+        full_name: document.getElementById('user-fullname').value.trim(),
+        designation: document.getElementById('user-designation').value.trim(),
+        email: document.getElementById('user-email').value.trim(),
+        role: document.getElementById('user-role').value,
+        password: document.getElementById('user-password').value
+    };
+
+    if (!data.username || !data.full_name || !data.email || !data.role) {
+        showToast('Username, Full Name, Email, and Role are required', 'error');
+        return;
+    }
+    if (!id && !data.password) {
+        showToast('Password is required for new users', 'error');
+        return;
+    }
+
+    const action = id ? 'update' : 'create';
+    if (id) data.id = id;
+
+    const result = await apiPost(`users.php?action=${action}`, data);
+    if (result.success) {
+        showToast(id ? 'User updated ✓' : 'User created ✓');
+        closeModal('modal-users');
+        loadUsersTable();
+    } else {
+        showToast(result.error || 'Save failed', 'error');
+    }
+}
+
+// Wire up "Add User" button
+const _addUsersBtn = document.querySelector('[onclick="openAddModal(\'users\')"]');
+if (_addUsersBtn) {
+    _addUsersBtn.setAttribute('onclick', 'openUserModal()');
+}
+
+// GTFS Extra Fields Toggle
+function toggleGtfsFields(category) {
+    const extraFields = document.querySelectorAll('.gtfs-extra-field');
+    const isSchoolGrant = (category === 'School Grant');
+    extraFields.forEach(field => {
+        field.style.display = isSchoolGrant ? 'block' : 'none';
+        const selects = field.querySelectorAll('select');
+        if (!isSchoolGrant) selects.forEach(s => s.value = '');
+    });
+}
+
+// ===== NOTICE CARD TYPES =====
+function handleNoticeTypeChange(value) {
+    const wrap = document.getElementById('notices-new-type-wrap');
+    const input = document.getElementById('notices-new-type-input');
+    if (value === '__NEW__') {
+        if (wrap) wrap.style.display = 'block';
+        if (input) input.focus();
+    } else {
+        if (wrap) wrap.style.display = 'none';
+    }
+}
+
+async function loadNoticeCardTypes(selectedValue = '') {
+    const select = document.getElementById('notices-card-type-select');
+    const wrap = document.getElementById('notices-new-type-wrap');
+    const input = document.getElementById('notices-new-type-input');
+    if (!select) return;
+
+    if (wrap) wrap.style.display = 'none';
+    if (input) input.value = '';
+
+    const result = await apiGet('notices.php?action=list');
+    const defaultTypes = ['dates', 'plan', 'quick_links'];
+    let types = [...defaultTypes];
+
+    if (result && result.data) {
+        result.data.forEach(item => {
+            if (item.card_type && !types.includes(item.card_type)) {
+                types.push(item.card_type);
+            }
+        });
+    }
+
+    // Clear old options and rebuild
+    select.innerHTML = '';
+
+    types.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t;
+        let label = t;
+        if (t === 'dates') label = 'Term Dates';
+        else if (t === 'plan') label = 'Education Plan';
+        else if (t === 'quick_links') label = 'Quick Links';
+        else label = t.charAt(0).toUpperCase() + t.slice(1).replace(/_/g, ' ');
+        opt.textContent = label;
+        select.appendChild(opt);
+    });
+
+    // Add "+ Add New Type..." option
+    const newOpt = document.createElement('option');
+    newOpt.value = '__NEW__';
+    newOpt.textContent = '+ Add New Type...';
+    select.appendChild(newOpt);
+
+    if (selectedValue) {
+        select.value = selectedValue;
+        if (select.selectedIndex === -1) {
+            // If it's not in the dropdown list, add it dynamically
+            const customOpt = document.createElement('option');
+            customOpt.value = selectedValue;
+            customOpt.textContent = selectedValue.charAt(0).toUpperCase() + selectedValue.slice(1).replace(/_/g, ' ');
+            // Insert before "__NEW__"
+            select.insertBefore(customOpt, newOpt);
+            select.value = selectedValue;
+        }
+    }
+
+    // Refresh custom select representation
+    const parentContainer = select.closest('.custom-select-container');
+    if (parentContainer) {
+        refreshCustomSelect(select);
+    }
+}
+
+// =============================================
