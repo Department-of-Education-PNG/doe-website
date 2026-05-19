@@ -389,7 +389,7 @@
             nav.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', (e) => {
                     const dropdownParent = link.parentElement;
-                    const isMobileAccordion = window.innerWidth <= 900 && dropdownParent.classList.contains('dropdown') && link.classList.contains('nav-link');
+                    const isMobileAccordion = window.innerWidth <= 1199 && dropdownParent.classList.contains('dropdown') && link.classList.contains('nav-link');
                     
                     if (isMobileAccordion) {
                         e.preventDefault(); 
